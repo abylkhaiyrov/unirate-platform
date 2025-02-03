@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: unirate-platform-registry
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  datasource:
+    url: ${JDBC_URL:jdbc:postgresql://localhost:5433/unirate_platform}
+    username: postgres
+    password: qwerty
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8087
+
+logging:
+  level:
+    ROOT: INFO
+    kz.mms.website_app: INFO

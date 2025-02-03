@@ -1,9 +1,10 @@
 package kz.abylkhaiyrov.unirateplatformregistry.entity;
 
-import jakarta.persistence.*;
 import kz.abylkhaiyrov.unirateplatformregistry.entity.AbstractAudit.AbstractAuditEntity;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -29,5 +30,9 @@ public class User extends AbstractAuditEntity {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
 }
