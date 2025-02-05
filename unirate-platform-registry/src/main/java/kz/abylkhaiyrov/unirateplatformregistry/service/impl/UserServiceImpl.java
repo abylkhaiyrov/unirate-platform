@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserByEmail(String token,String email) {
+        var user =
         userRepository.deleteByEmail(email);
     }
 
