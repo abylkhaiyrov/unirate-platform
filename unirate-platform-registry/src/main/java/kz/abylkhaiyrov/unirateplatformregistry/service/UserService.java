@@ -16,17 +16,17 @@ public interface UserService {
 
     UserDto updateUser(String token, Long userId, UserUpdateDto user);
 
-    UserDto getUserById(String token,Long id);
+    UserDto getUserById(Long id);
 
-    UserDto getUserByEmail(String token,String email);
+    UserDto getUserByEmail(String token, String email);
 
     UserDto getUserByUsername(String token, String username);
 
-    void deleteUserById(String token,Long id);
+    void deleteUserById(String token, Long id);
 
-    void deleteUserByEmail(String token,String email);
+    void deleteUserByEmail(String token, String email);
 
-    void deleteUserByUsername(String token,String username);
+    void deleteUserByUsername(String token, String username);
 
     List<User> getAllUsers();
 

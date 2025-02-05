@@ -12,6 +12,7 @@ import kz.abylkhaiyrov.unirateplatformregistry.security.JWTAuthenticationFilter;
 import kz.abylkhaiyrov.unirateplatformregistry.service.UserService;
 import kz.abylkhaiyrov.unirateplatformregistry.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jose4j.jwt.JwtClaims;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,10 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
+    @SneakyThrows
     @Override
     public UserDto updateUser(String token, Long userId, UserUpdateDto dto) {
+        var user = getDataByToken(token);
         var entity = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
@@ -54,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(String token,Long id) {
+    public UserDto getUserById(Long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(
                         String.format("User not found with id: %s", id)
@@ -63,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserByEmail(String token,String email) {
+    public UserDto getUserByEmail(String token, String email) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(
                         String.format("User not found with email: %s", email)
@@ -80,19 +83,24 @@ public class UserServiceImpl implements UserService {
         return adapter.toDto(user);
     }
 
+    @SneakyThrows
     @Override
-    public void deleteUserById(String token,Long id) {
+    public void deleteUserById(String token, Long id) {
+        var user = getDataByToken(token);
         userRepository.deleteById(id);
     }
 
     @Override
-    public void deleteUserByEmail(String token,String email) {
-        var user =
+    @SneakyThrows
+    public void deleteUserByEmail(String token, String email) {
+        var user = getDataByToken(token);
         userRepository.deleteByEmail(email);
     }
 
     @Override
-    public void deleteUserByUsername(String token,String username) {
+    @SneakyThrows
+    public void deleteUserByUsername(String token, String username) {
+        var user = getDataByToken(token);
         userRepository.deleteByUsername(username);
     }
 

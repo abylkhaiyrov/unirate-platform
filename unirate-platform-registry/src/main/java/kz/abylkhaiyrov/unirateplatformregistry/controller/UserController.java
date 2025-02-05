@@ -36,8 +36,8 @@ public class UserController {
     @Operation(summary = "Получить пользователя по ID", description = "Возвращает данные пользователя по его ID")
     @ApiResponse(responseCode = "200", description = "Пользователь найден", content = @Content(mediaType = "application/json"))
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<UserDto> getUserById(@Parameter(hidden = true) @RequestHeader(AUTHORIZATION) String token, @PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(token, id));
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @Operation(summary = "Получить пользователя по имени", description = "Возвращает данные пользователя по его имени пользователя")
