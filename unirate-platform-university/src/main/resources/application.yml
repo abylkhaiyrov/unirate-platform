@@ -1,13 +1,13 @@
 spring:
   application:
-    name: unirate-platform-registry
+    name: unirate-platform-university
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+      show-sql: true
   datasource:
     url: ${JDBC_URL:jdbc:postgresql://localhost:5433/unirate_platform}
     username: postgres
@@ -15,8 +15,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 server:
-  port: 8087
-
+  port: 8082
 
 logging:
   level:

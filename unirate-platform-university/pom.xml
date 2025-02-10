@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>kz.abylkhaiyrov</groupId>
-    <artifactId>unirate-platform-registry</artifactId>
+    <artifactId>unirate-platform-university</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>unirate-platform-registry</name>
-    <description>unirate-platform-registry</description>
+    <name>unirate-platform-university</name>
+    <description>University, Review, Course Services – каждый из них отвечает за свою предметную область, поддерживая данные через собственные БД или отдельные схемы</description>
     <url/>
     <licenses>
         <license/>
