@@ -6,6 +6,7 @@ create table if not exists universities(
     base_cost numeric(10,2),
     location varchar(255),
     website varchar(255),
+    rating_count bigint,
     accreditation varchar(255),
     contact_email varchar(255),
     logo_url varchar(255),
@@ -14,11 +15,11 @@ create table if not exists universities(
     last_modified_by varchar(50),
     last_modified_date date,
     active boolean
-    );
+);
 
 create table if not exists courses(
-                                      id bigint primary key,
-                                      university_id bigint REFERENCES universities(id),
+    id bigint primary key,
+    university_id bigint REFERENCES universities(id),
     name varchar(255),
     description text,
     duration_years integer,
@@ -31,24 +32,24 @@ create table if not exists courses(
     last_modified_by varchar(50),
     last_modified_date date,
     active boolean
-    );
+);
 
 create table if not exists specialties(
                                           id bigint primary key,
-                                          nane varchar(255),
+                                          name varchar(255),
     description text,
     created_by varchar(50),
     created_date date,
     last_modified_by varchar(50),
     last_modified_date date,
     active boolean
-    );
+);
 
 create table if not exists course_specialties(
                                                  course_id bigint references courses(id) not null ,
     specialty_id bigint references specialties(id) not null,
     primary key (course_id,specialty_id)
-    );
+);
 
 create table if not exists reviews(
                                       id bigint primary key,
@@ -61,7 +62,7 @@ create table if not exists reviews(
     last_modified_by varchar(50),
     last_modified_date date,
     active boolean
-    );
+);
 
 create table if not exists comparison_histories(
                                                    id      bigint primary key,
@@ -74,4 +75,4 @@ create table if not exists comparison_histories(
     last_modified_by varchar(50),
     last_modified_date date,
     active boolean
-    );
+);

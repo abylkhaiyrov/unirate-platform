@@ -1,6 +1,17 @@
 spring:
   application:
     name: unirate-platform-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: unirate-platform-registry
+          uri:  http://localhost:8087
+          predicates:
+            - Path=/users/**
+        - id:  unirate-platform-university
+          uri: http://localhost:8082
+          predicates:
+            - Path=/university/**
 
 server:
   port: 8081
@@ -11,3 +22,7 @@ eureka:
     fetch-registry: false
   server:
     enable-self-preservation: false
+  instance:
+    prefer-ip-address: true
+  service-url:
+    defaultZone: http://localhost:8761/eureka/

@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,8 +28,11 @@ public class University extends AbstractAuditEntity {
     @Column(name = "rating")
     private BigDecimal rating;
 
+    @Column(name = "rating_count")
+    private Long ratingCount;
+
     @Column(name = "base_cost")
-    private BigDecimal baseCost;
+    private Long baseCost;
 
     @Column(name = "location")
     private String location;
@@ -43,5 +48,15 @@ public class University extends AbstractAuditEntity {
 
     @Column(name = "logo_url")
     private String logoUrl;
+
+    @OneToMany(mappedBy = "university")
+    private List<Review> reviews = new ArrayList<>();
+
+    /**
+     * Связь один ко многим (один университет - много курсов).
+     * mappedBy="university" говорит, что колонка FK находится в сущности Course.
+     */
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Course> courses = new ArrayList<>();
 
 }
