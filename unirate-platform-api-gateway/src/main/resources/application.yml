@@ -1,28 +1,30 @@
 spring:
   application:
     name: unirate-platform-api-gateway
+#  main:
+#    web-application-type: reactive
   cloud:
     gateway:
       routes:
         - id: unirate-platform-registry
-          uri:  http://localhost:8087
+          uri: lb://auth-service
           predicates:
-            - Path=/users/**
+            - Path=/auth-unirate-platform/**
+          filters:
+            - StripPrefix=1
         - id:  unirate-platform-university
-          uri: http://localhost:8082
+          uri: lb://university-service
           predicates:
-            - Path=/university/**
+            - Path=/university-unirate-platform/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: 8081
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
-  server:
-    enable-self-preservation: false
-  instance:
-    prefer-ip-address: true
-  service-url:
-    defaultZone: http://localhost:8761/eureka/
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
