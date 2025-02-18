@@ -59,6 +59,15 @@ public class UniversityService {
         return adapter.entity2Dto(entity);
     }
 
+    public University getUniversityById(Long id){
+        if (id == null){
+            throw new EmptyException("University id cannot be null");
+        }
+
+        return universityRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
+    }
+
     @Transactional
     public void plusRating(Integer newRating, Long universityId) {
         var entity = universityRepository.findById(universityId)
@@ -75,7 +84,7 @@ public class UniversityService {
         entity.setRating(newAvg);
         entity.setRatingCount(oldCount + 1);
 
-        universityRepository.save(entity);
+        saveUniversity(entity);
     }
 
     public List<UniversityDto> getAllUniversities(){
@@ -84,10 +93,12 @@ public class UniversityService {
         return list.stream().map(adapter::entity2Dto).collect(Collectors.toList());
     }
 
-    public Page<UniversityDto> getUniversitiesByPage(Pageable pageable){
-        var list = universityRepository.findAll(pageable);
+    public Page<UniversityDto> getUniversitiesByPage(Pageable pageable) {
+        Page<University> universities = universityRepository.findAllByActiveTrue(pageable);
 
-        return null;
+        return universities.map(adapter::entity2Dto);
     }
+
+
 
 }

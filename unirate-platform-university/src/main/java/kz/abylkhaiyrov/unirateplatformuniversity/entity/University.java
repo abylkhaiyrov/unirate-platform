@@ -31,7 +31,7 @@ public class University extends AbstractAuditEntity {
     @Column(name = "rating_count")
     private Long ratingCount;
 
-    @Column(name = "base_cost")
+    @Column(name = "base_cost", columnDefinition = "Данная колонка предназначена для примерно ценой для оплаты за все")
     private Long baseCost;
 
     @Column(name = "location")
