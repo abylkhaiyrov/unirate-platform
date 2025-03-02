@@ -1,12 +1,11 @@
 package kz.abylkhaiyrov.unirateplatformregistry.dto.auth;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
-@ToString
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
 public class UserRegisterDto {
     private String username;
     private String password;

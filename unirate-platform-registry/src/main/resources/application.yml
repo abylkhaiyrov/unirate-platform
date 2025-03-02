@@ -13,10 +13,24 @@ spring:
     username: postgres
     password: qwerty
     driver-class-name: org.postgresql.Driver
-
+  mail:
+    host: smtp.gmail.com
+    username: askar.abylkhaiyrov.00@gmail.com
+    password: dssg nfoy sias moik
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jwt:
+    secret: 8ac9dde390d3f6d48dba56ba14c37c26fd86af433abc08d174e35b951a713990
 server:
+#  servlet:
+#    context-path: /api/v1/user/
   port: 8087
-
 
 logging:
   level:
