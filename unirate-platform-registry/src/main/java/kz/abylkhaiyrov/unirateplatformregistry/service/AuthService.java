@@ -108,8 +108,17 @@ public class AuthService {
 
     public void sendActivationEmail(String email, Integer activationCode) {
         log.info("Sending activation email to {}", email);
-        var subject = "Activation code on UniRate";
-        var body = "Ваш код для активации: " + activationCode;
+        var subject = "Ваш код подтверждения для регистрации в UniRate";
+        var body = "Приветствуем вас!\n" +
+                "\n" +
+                "Вы зарегистрировались на платформе UniRate. Для подтверждения вашего email используйте следующий код:\n" +
+                "\n"
+                + activationCode +
+                "\n" +
+                "Код действует в течение 24 часов. Если вы не запрашивали этот код, просто проигнорируйте это письмо.\n" +
+                "\n" +
+                "С уважением,\n" +
+                "Команда UniRate ";
         mailSender.sendMail(email, subject, body);
     }
 
