@@ -16,4 +16,6 @@ public interface UniversityRepository extends JpaRepository<University, Long> {
 
     Page<University> findAllByActiveTrue(Pageable pageable);
 
+    List<University> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String keyword,String keywords);
+
 }

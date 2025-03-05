@@ -3,10 +3,11 @@ create table if not exists universities(
                                            name varchar(255),
     description text,
     rating numeric(3,2),
-    base_cost numeric(10,2),
+    base_cost BIGINT,
     location varchar(255),
     website varchar(255),
     accreditation varchar(255),
+                                           rating_count bigint,
     contact_email varchar(255),
     logo_url varchar(255),
     created_by varchar(50),
@@ -15,6 +16,12 @@ create table if not exists universities(
     last_modified_date timestamp,
     active boolean
     );
+
+ALTER TABLE universities
+    ALTER COLUMN base_cost TYPE BIGINT;
+
+alter table universities
+    add column rating_count bigint;
 
 create table if not exists courses(
                                       id bigint primary key,
@@ -32,6 +39,20 @@ create table if not exists courses(
     last_modified_date timestamp,
     active boolean
     );
+
+create table if not exists faculties(
+    id bigint primary key,
+    university_id bigint REFERENCES universities(id),
+    name varchar(255),
+    description text,
+    contact_email varchar,
+    contact_phone varchar,
+    created_by varchar(50),
+    created_date timestamp,
+    last_modified_by varchar(50),
+    last_modified_date timestamp,
+    active boolean
+);
 
 create table if not exists specialties(
                                           id bigint primary key,
