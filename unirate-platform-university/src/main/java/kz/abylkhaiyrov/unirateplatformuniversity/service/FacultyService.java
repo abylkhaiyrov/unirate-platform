@@ -54,7 +54,7 @@ public class FacultyService {
         return facultyMapper.entity2Dto(faculty);
     }
 
-    void deleteById(Long id) {
+    public void deleteById(Long id) {
         var faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Факультет не найден с id: " + id));
         log.info("Деактивация факультета с id: {}", id);

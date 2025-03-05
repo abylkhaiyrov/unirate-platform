@@ -1,5 +1,6 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.configuration;
 
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<?> handleFeignExceptions(FeignException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

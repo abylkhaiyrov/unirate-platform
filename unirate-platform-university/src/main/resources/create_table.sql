@@ -72,17 +72,37 @@ create table if not exists course_specialties(
     );
 
 create table if not exists reviews(
-                                      id bigint primary key,
-                                      university_id bigint references universities(id) not null,
-    user_id bigint,
-    rating smallint,
-    comment text,
+    id bigint primary key,
+    university_id bigint references universities(id) not null,
+    user_id BIGINT NOT NULL,
+    comment TEXT,
+    rating SMALLINT,
+    status VARCHAR(20) DEFAULT 'PENDING',
+    likes INT DEFAULT 0,
+    dislikes INT DEFAULT 0,
     created_by varchar(50),
     created_date timestamp,
     last_modified_by varchar(50),
     last_modified_date timestamp,
     active boolean
-    );
+);
+
+CREATE TABLE review_comments (
+     id BIGINT PRIMARY KEY,
+     review_id BIGINT NOT NULL,
+     user_id BIGINT NOT NULL,
+     comment text,
+     created_by varchar(50),
+     created_date timestamp,
+     last_modified_by varchar(50),
+     last_modified_date timestamp,
+     active boolean,
+     CONSTRAINT fk_review
+         FOREIGN KEY (review_id) REFERENCES reviews(id)
+);
+
+alter table review_comments
+add column comment text;
 
 create table if not exists comparison_histories(
                                                    id      bigint primary key,
@@ -96,3 +116,5 @@ create table if not exists comparison_histories(
     last_modified_date timestamp,
     active boolean
 );
+
+drop table reviews;

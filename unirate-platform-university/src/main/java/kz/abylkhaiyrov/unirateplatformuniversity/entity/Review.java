@@ -1,36 +1,37 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.entity;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.AbstractAudit.AbstractAuditEntity;
+import kz.abylkhaiyrov.unirateplatformuniversity.enums.ReviewStatus;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "reviews")
+@Getter
+@Setter
 public class Review extends AbstractAuditEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Многие к одному: один университет, много отзывов.
-     * Ставим not null (nullable = false), так как в DDL у вас university_id NOT NULL.
-     */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "university_id", nullable = false)
-    private University university;
-
-    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "rating")
+    @ManyToOne
+    @JoinColumn(name = "university_id")
+    private University university;
+
+    private String comment;
+
     private Short rating;
 
-    @Column(name = "comment")
-    private String comment;
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status = ReviewStatus.PENDING;
+
+    private Integer likes = 0;
+
+    private Integer dislikes = 0;
 
 }
