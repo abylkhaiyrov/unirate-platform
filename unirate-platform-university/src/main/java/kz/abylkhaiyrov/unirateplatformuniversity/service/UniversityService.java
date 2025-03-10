@@ -43,6 +43,8 @@ public class UniversityService {
         entity.setBaseCost(dto.getBaseCost());
         entity.setRating(BigDecimal.ZERO);
         entity.setRatingCount(dto.getRatingCount());
+        entity.setMilitaryDepartment(dto.getMilitaryDepartment());
+        entity.setDormitory(dto.getDormitory());
         saveUniversity(entity);
         log.info("University created with University:{}", entity);
         return adapter.entity2Dto(entity);

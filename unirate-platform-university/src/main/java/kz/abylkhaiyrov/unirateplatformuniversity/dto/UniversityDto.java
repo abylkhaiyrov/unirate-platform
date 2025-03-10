@@ -31,4 +31,8 @@ public class UniversityDto {
 
     private Long ratingCount;
 
+    private Boolean militaryDepartment;
+
+    private Boolean dormitory;
+
 }

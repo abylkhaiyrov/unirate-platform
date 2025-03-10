@@ -49,6 +49,12 @@ public class University extends AbstractAuditEntity {
     @Column(name = "logo_url")
     private String logoUrl;
 
+    @Column(name = "military_department")
+    private Boolean militaryDepartment;
+
+    @Column(name = "dormitory")
+    private Boolean dormitory;
+
     @OneToMany(mappedBy = "university")
     private List<Review> reviews = new ArrayList<>();
 

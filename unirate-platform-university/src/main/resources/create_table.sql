@@ -117,4 +117,21 @@ create table if not exists comparison_histories(
     active boolean
 );
 
-drop table reviews;
+alter table universities
+    add column military_department boolean;
+
+alter table universities
+    add column dormitory boolean;
+
+
+create table if not exists university_address(
+id bigint primary key,
+city varchar,
+region varchar,
+full_address varchar,
+created_by varchar(50),
+created_date timestamp,
+last_modified_by varchar(50),
+last_modified_date timestamp,
+active boolean
+);
