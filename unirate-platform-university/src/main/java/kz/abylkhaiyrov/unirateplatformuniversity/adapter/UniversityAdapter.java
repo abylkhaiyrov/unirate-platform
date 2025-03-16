@@ -1,18 +1,23 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.adapter;
 
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityAddressDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.entity.Faculty;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.UniversityAddress;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class UniversityAdapter {
 
     private final UniversityAddressMapper universityAddressMapper;
+    private final FacultyMapper facultyMapper;
 
     public UniversityDto entity2Dto(University entity) {
         var dto = new UniversityDto();
@@ -34,7 +39,7 @@ public class UniversityAdapter {
         return dto;
     }
 
-    public UniversityDto entity2Dto(University entity , UniversityAddress universityAddress) {
+    public UniversityDto entity2Dto(University entity , UniversityAddress universityAddress, List<FacultyDto> faculty) {
         var dto = new UniversityDto();
         dto.setId(entity.getId());
         dto.setAccreditation(entity.getAccreditation());
@@ -52,6 +57,7 @@ public class UniversityAdapter {
         dto.setDormitory(entity.getDormitory());
         dto.setMilitaryDepartment(entity.getMilitaryDepartment());
         var universityAddressDto = universityAddressMapper.entity2Dto(universityAddress);
+        dto.setFaculty(faculty);
         dto.setUniversityAddress(universityAddressDto);
         return dto;
     }

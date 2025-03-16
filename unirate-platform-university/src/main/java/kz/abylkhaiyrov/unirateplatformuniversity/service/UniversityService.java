@@ -40,6 +40,7 @@ public class UniversityService {
     private final UniversityRepository universityRepository;
     private final UniversityAdapter adapter;
     private final UniversityAddressService universityAddressService;
+    private final FacultyService facultyService;
 
     public UniversityDto createUniversity(CreateUniversityDto dto){
         log.info("Creating university with DTO: {}", dto);
@@ -72,7 +73,8 @@ public class UniversityService {
         var entity = universityRepository.findByNameContainingIgnoreCase(name)
                 .orElseThrow(() -> new NotFoundException("University not found with name: " + name));
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-        return adapter.entity2Dto(entity, universityAddress);
+        var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
     public University getUniversityById(Long id){
@@ -124,7 +126,8 @@ public class UniversityService {
         return list.stream()
                 .map(entity -> {
                     var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-                    return adapter.entity2Dto(entity, universityAddress);
+                    var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+                    return adapter.entity2Dto(entity, universityAddress, faculty);
                 })
                 .collect(Collectors.toList());
     }
@@ -133,7 +136,8 @@ public class UniversityService {
         return universityRepository.findAllByActiveTrue(pageable)
                 .map(entity -> {
                     var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-                    return adapter.entity2Dto(entity, universityAddress);
+                    var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+                    return adapter.entity2Dto(entity, universityAddress, faculty);
                 });
     }
 
@@ -172,7 +176,8 @@ public class UniversityService {
         saveUniversity(entity);
         log.info("University updated: {}", entity);
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-        return adapter.entity2Dto(entity, universityAddress);
+        var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
     public void deleteUniversity(Long id) {
@@ -234,7 +239,8 @@ public class UniversityService {
         return universityRepository.findAll(spec, pageable)
                 .map(entity -> {
             var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-            return adapter.entity2Dto(entity, universityAddress);
+            var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+            return adapter.entity2Dto(entity, universityAddress, faculty);
         });
     }
 
@@ -244,7 +250,8 @@ public class UniversityService {
         var page = universityRepository.findAllByActiveTrue(pageable);
         return page.getContent().stream().map(entity -> {
             var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-            return adapter.entity2Dto(entity, universityAddress);
+            var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+            return adapter.entity2Dto(entity, universityAddress, faculty);
         }).collect(Collectors.toList());
     }
 
@@ -255,7 +262,8 @@ public class UniversityService {
         entity.setLogoUrl(logoUrl);
         saveUniversity(entity);
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-        return adapter.entity2Dto(entity, universityAddress);
+        var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
     public UniversityDto activateUniversity(Long id, boolean active) {
@@ -265,7 +273,8 @@ public class UniversityService {
         entity.setActive(active);
         saveUniversity(entity);
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
-        return adapter.entity2Dto(entity, universityAddress);
+        var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
 }
