@@ -39,7 +39,7 @@ public class ReviewService {
         review.setRating(dto.getRating());
         review.setUniversity(universityService.getUniversityById(dto.getUniversityId()));
         review.setUserId(dto.getUserId());
-        saveReview(review);
+        review = saveReview(review);
         return mapToReviewReturnDto(review);
     }
 
@@ -51,7 +51,7 @@ public class ReviewService {
                 .orElseThrow(() -> new NotFoundException("Review not found with id: " + reviewId));
         review.setComment(dto.getComment());
         review.setRating(dto.getRating());
-        saveReview(review);
+        review = saveReview(review);
         return mapToReviewReturnDto(review);
     }
 
@@ -72,7 +72,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found with id: " + reviewId));
         review.setStatus(approve ? ReviewStatus.APPROVED : ReviewStatus.REJECTED);
-        saveReview(review);
+        review = saveReview(review);
         return mapToReviewReturnDto(review);
     }
 
@@ -109,7 +109,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found with id: " + reviewId));
         review.setLikes(review.getLikes() + 1);
-        saveReview(review);
+        review = saveReview(review);
         return mapToReviewReturnDto(review);
     }
 
@@ -120,7 +120,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found with id: " + reviewId));
         review.setDislikes(review.getDislikes() + 1);
-        saveReview(review);
+        review = saveReview(review);
         return mapToReviewReturnDto(review);
     }
 
@@ -149,7 +149,7 @@ public class ReviewService {
         comment.setReview(review);
         comment.setUserId(commentDto.getUserId());
         comment.setComment(commentDto.getComment());
-        saveReviewComment(comment);
+        comment = saveReviewComment(comment);
         commentDto.setId(comment.getId());
         return commentDto;
     }
@@ -215,11 +215,11 @@ public class ReviewService {
         return dto;
     }
 
-    private void saveReview(Review review) {
-        reviewRepository.save(review);
+    private Review saveReview(Review review) {
+        return  reviewRepository.save(review);
     }
 
-    private void saveReviewComment(ReviewComment reviewComment) {
-        reviewCommentRepository.save(reviewComment);
+    private ReviewComment saveReviewComment(ReviewComment reviewComment) {
+        return reviewCommentRepository.save(reviewComment);
     }
 }

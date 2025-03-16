@@ -7,9 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class UniversityDto {
-
-    private Long id;
+public class CreateUniversityDto {
 
     private String name;
 
@@ -35,5 +33,4 @@ public class UniversityDto {
 
     private Boolean dormitory;
 
-    private UniversityAddressDto universityAddress;
 }

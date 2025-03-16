@@ -44,8 +44,7 @@ public class CourseService {
         entity.setStudyMode(dto.getStudyMode());
         entity.setTuitionFee(dto.getTuitionFee());
         entity.setUniversity(universityService.getUniversityById(dto.getUniversityId()));
-
-        saveCourse(entity);
+        entity = saveCourse(entity);
         return adapter.dto2Entity(entity);
     }
 
@@ -101,7 +100,7 @@ public class CourseService {
         updateIfChanged(entity::getStudyMode, entity::setStudyMode, dto.getStudyMode());
         updateIfChanged(entity::getTuitionFee, entity::setTuitionFee, dto.getTuitionFee());
 
-        saveCourse(entity);
+        entity = saveCourse(entity);
         return adapter.dto2Entity(entity);
     }
 
@@ -125,8 +124,8 @@ public class CourseService {
      *
      * @param entity объект курса
      */
-    private void saveCourse(Course entity) {
-        courseRepository.save(entity);
+    private Course saveCourse(Course entity) {
+        return courseRepository.save(entity);
     }
 
     /**

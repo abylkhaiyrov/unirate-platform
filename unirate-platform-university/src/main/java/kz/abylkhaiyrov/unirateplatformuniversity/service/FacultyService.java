@@ -6,6 +6,7 @@ import kz.abylkhaiyrov.unirateplatformuniversity.entity.Faculty;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.EmptyException;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.FacultyRepository;
+import kz.abylkhaiyrov.unirateplatformuniversity.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,25 +23,24 @@ import java.util.stream.Collectors;
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
-    private final UniversityService universityService;
+    private final UniversityRepository universityRepository;
     private final FacultyMapper facultyMapper;
 
-    private void save(Faculty faculty) {
-        facultyRepository.save(faculty);
+    private Faculty save(Faculty entity) {
+        return facultyRepository.save(entity);
     }
 
     public FacultyDto create(FacultyDto dto) {
         log.info("Create faculty: {}", dto);
-        var university = universityService.getUniversityById(dto.getUniversityId());
+        var university = universityRepository.findById(dto.getUniversityId()).orElseThrow(() -> new EmptyException("University not found with id: " + dto.getUniversityId()));
         var entity = new Faculty();
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setContactEmail(dto.getContactEmail());
         entity.setContactPhone(dto.getContactPhoneNumber());
         entity.setUniversity(university);
-        // Предполагается, что при создании факультет активен по умолчанию
         entity.setActive(true);
-        save(entity);
+        entity = save(entity);
         return facultyMapper.entity2Dto(entity);
     }
 

@@ -14,8 +14,36 @@ create table if not exists universities(
     created_date timestamp,
     last_modified_by varchar(50),
     last_modified_date timestamp,
+                                           military_department boolean,
+                                           dormitory boolean,
     active boolean
     );
+
+CREATE SEQUENCE universities_address_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE university_address ALTER COLUMN id SET DEFAULT nextval('universities_address_id_seq');
+SELECT last_value, is_called FROM universities_id_seq;
+ALTER SEQUENCE universities_id_seq RESTART WITH 1;
+
+CREATE SEQUENCE faculty_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE faculties ALTER COLUMN id SET DEFAULT nextval('faculty_id_seq');
+
+CREATE SEQUENCE universities_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE universities ALTER COLUMN id SET DEFAULT nextval('universities_id_seq');
+
+CREATE SEQUENCE courses_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE courses ALTER COLUMN id SET DEFAULT nextval('courses_id_seq');
+
+CREATE SEQUENCE universities_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE universities ALTER COLUMN id SET DEFAULT nextval('universities_id_seq');
+
+CREATE SEQUENCE review_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE reviews ALTER COLUMN id SET DEFAULT nextval('review_id_seq');
+
+CREATE SEQUENCE review_comments_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE review_comments ALTER COLUMN id SET DEFAULT nextval('review_comments_id_seq');
+
+CREATE SEQUENCE specialties_comments_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE specialties ALTER COLUMN id SET DEFAULT nextval('specialties_comments_id_seq');
 
 ALTER TABLE universities
     ALTER COLUMN base_cost TYPE BIGINT;
@@ -122,6 +150,9 @@ alter table universities
 
 alter table universities
     add column dormitory boolean;
+
+alter table university_address
+    add column university_id bigint references universities(id) not null;
 
 
 create table if not exists university_address(

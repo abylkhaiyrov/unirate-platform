@@ -11,8 +11,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class ReviewComment extends AbstractAuditEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_comments_id_seq")
+    @SequenceGenerator(name = "review_comments_id_seq", sequenceName = "review_comments_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne

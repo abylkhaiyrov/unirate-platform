@@ -13,8 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Review extends AbstractAuditEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_seq")
+    @SequenceGenerator(name = "review_id_seq", sequenceName = "review_id_seq", allocationSize = 1)
     private Long id;
 
     private Long userId;

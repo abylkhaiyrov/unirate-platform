@@ -13,7 +13,8 @@ import javax.persistence.*;
 public class UniversityAddress extends AbstractAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "universities_address_id_seq")
+    @SequenceGenerator(name = "universities_address_id_seq", sequenceName = "universities_address_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "city")
@@ -24,5 +25,9 @@ public class UniversityAddress extends AbstractAuditEntity {
 
     @Column(name = "full_address")
     private String fullAddress;
+
+    @OneToOne
+    @JoinColumn(name = "university_id", unique = true)
+    private University university;
 
 }

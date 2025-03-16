@@ -15,8 +15,10 @@ import java.util.List;
 public class Specialty extends AbstractAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "specialties_comments_id_seq")
+    @SequenceGenerator(name = "specialties_comments_id_seq", sequenceName = "specialties_comments_id_seq", allocationSize = 1)
     private Long id;
+
     @Column(name = "name")
     private String name;
 

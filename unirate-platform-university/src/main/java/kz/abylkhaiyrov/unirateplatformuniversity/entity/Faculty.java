@@ -15,7 +15,8 @@ import javax.persistence.*;
 public class Faculty extends AbstractAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_id_seq")
+    @SequenceGenerator(name = "faculty_id_seq", sequenceName = "faculty_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne

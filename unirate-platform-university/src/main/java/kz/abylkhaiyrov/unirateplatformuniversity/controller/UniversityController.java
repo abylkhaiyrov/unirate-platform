@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.adapter.UniversityAdapter;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateUniversityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversitySearchDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.UniversityService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class UniversityController {
             }
     )
     @PostMapping
-    public UniversityDto createUniversity(@RequestBody UniversityDto universityDto) {
+    public UniversityDto createUniversity(@RequestBody CreateUniversityDto universityDto) {
         return universityService.createUniversity(universityDto);
     }
 
@@ -115,7 +117,7 @@ public class UniversityController {
     @PutMapping("/{id}")
     public UniversityDto updateUniversity(
             @Parameter(description = "ID университета", required = true) @PathVariable Long id,
-            @RequestBody UniversityDto universityDto) {
+            @RequestBody CreateUniversityDto universityDto) {
         return universityService.updateUniversity(id, universityDto);
     }
 
@@ -140,10 +142,10 @@ public class UniversityController {
                     @ApiResponse(responseCode = "200", description = "Результаты поиска успешно получены", content = @Content(mediaType = "application/json"))
             }
     )
-    @GetMapping("/search")
-    public List<UniversityDto> searchUniversities(
-            @Parameter(description = "Ключевое слово для поиска", required = true) @RequestParam String keyword) {
-        return universityService.searchUniversities(keyword);
+    @PostMapping("/search")
+    public Page<UniversityDto> searchUniversities(
+            @RequestBody UniversitySearchDto universitySearchDto) {
+        return universityService.searchUniversities(universitySearchDto);
     }
 
     @Operation(

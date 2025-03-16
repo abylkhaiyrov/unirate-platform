@@ -15,7 +15,8 @@ import java.util.List;
 public class Course extends AbstractAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "courses_id_seq")
+    @SequenceGenerator(name = "courses_id_seq", sequenceName = "courses_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne

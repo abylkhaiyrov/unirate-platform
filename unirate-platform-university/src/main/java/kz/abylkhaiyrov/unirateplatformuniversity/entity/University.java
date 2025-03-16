@@ -16,7 +16,8 @@ import java.util.List;
 public class University extends AbstractAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "universities_id_seq")
+    @SequenceGenerator(name = "universities_id_seq", sequenceName = "universities_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "name")
@@ -64,5 +65,8 @@ public class University extends AbstractAuditEntity {
      */
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Course> courses = new ArrayList<>();
+
+    @OneToOne(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UniversityAddress universityAddress;
 
 }
