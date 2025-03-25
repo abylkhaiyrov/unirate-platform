@@ -1,5 +1,6 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.adapter;
 
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyAndSpecialityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityAddressDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityDto;
@@ -39,7 +40,7 @@ public class UniversityAdapter {
         return dto;
     }
 
-    public UniversityDto entity2Dto(University entity , UniversityAddress universityAddress, List<FacultyDto> faculty) {
+    public UniversityDto entity2Dto(University entity , UniversityAddress universityAddress, List<FacultyAndSpecialityDto> faculty) {
         var dto = new UniversityDto();
         dto.setId(entity.getId());
         dto.setAccreditation(entity.getAccreditation());

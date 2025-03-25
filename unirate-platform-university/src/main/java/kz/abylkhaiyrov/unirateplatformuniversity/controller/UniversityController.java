@@ -64,8 +64,7 @@ public class UniversityController {
     @GetMapping("/{id}")
     public UniversityDto getUniversityById(
             @Parameter(description = "ID университета", required = true) @PathVariable Long id) {
-        University university = universityService.getUniversityById(id);
-        return universityAdapter.entity2Dto(university);
+        return universityService.getById(id);
     }
 
     @Operation(

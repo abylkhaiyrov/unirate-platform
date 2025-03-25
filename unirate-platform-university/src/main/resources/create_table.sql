@@ -45,12 +45,6 @@ ALTER TABLE review_comments ALTER COLUMN id SET DEFAULT nextval('review_comments
 CREATE SEQUENCE specialties_comments_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE specialties ALTER COLUMN id SET DEFAULT nextval('specialties_comments_id_seq');
 
-ALTER TABLE universities
-    ALTER COLUMN base_cost TYPE BIGINT;
-
-alter table universities
-    add column rating_count bigint;
-
 create table if not exists courses(
                                       id bigint primary key,
                                       university_id bigint REFERENCES universities(id),
@@ -76,6 +70,7 @@ create table if not exists faculties(
     contact_email varchar,
     contact_phone varchar,
     created_by varchar(50),
+    base_cost bigint,
     created_date timestamp,
     last_modified_by varchar(50),
     last_modified_date timestamp,
@@ -83,8 +78,9 @@ create table if not exists faculties(
 );
 
 create table if not exists specialties(
-                                          id bigint primary key,
-                                          name varchar(255),
+  id bigint primary key,
+  name varchar(255),
+  faculty_id bigint REFERENCES faculties(id),
     description text,
     created_by varchar(50),
     created_date timestamp,
@@ -129,9 +125,6 @@ CREATE TABLE review_comments (
          FOREIGN KEY (review_id) REFERENCES reviews(id)
 );
 
-alter table review_comments
-add column comment text;
-
 create table if not exists comparison_histories(
                                                    id      bigint primary key,
                                                    user_id bigint,
@@ -145,20 +138,12 @@ create table if not exists comparison_histories(
     active boolean
 );
 
-alter table universities
-    add column military_department boolean;
-
-alter table universities
-    add column dormitory boolean;
-
-alter table university_address
-    add column university_id bigint references universities(id) not null;
-
 
 create table if not exists university_address(
 id bigint primary key,
 city varchar,
 region varchar,
+university_id bigint references universities(id) not null,
 full_address varchar,
 created_by varchar(50),
 created_date timestamp,

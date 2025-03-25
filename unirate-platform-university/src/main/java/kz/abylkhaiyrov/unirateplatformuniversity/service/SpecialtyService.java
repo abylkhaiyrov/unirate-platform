@@ -1,9 +1,12 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.adapter.SpecialtyMapper;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateSpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.SpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Specialty;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
+import kz.abylkhaiyrov.unirateplatformuniversity.repository.CourseRepository;
+import kz.abylkhaiyrov.unirateplatformuniversity.repository.FacultyRepository;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.SpecialtyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,8 @@ public class SpecialtyService {
 
     private final SpecialtyRepository specialtyRepository;
     private final SpecialtyMapper specialtyMapper;
+    private final FacultyRepository facultyRepository;
+    private final CourseRepository courseRepository;
 
     /**
      * Creates a new Specialty.
@@ -26,11 +31,36 @@ public class SpecialtyService {
      * @param specialtyDto the DTO containing the specialty data
      * @return the created Specialty as a DTO
      */
-    public SpecialtyDto createSpecialty(SpecialtyDto specialtyDto) {
+    public SpecialtyDto createSpecialty(CreateSpecialtyDto specialtyDto) {
         log.info("Creating Specialty: {}", specialtyDto);
-        Specialty specialty = specialtyMapper.dtoToEntity(specialtyDto);
-        specialty = specialtyRepository.save(specialty);
-        return specialtyMapper.entityToDto(specialty);
+        var entity = new Specialty();
+        entity.setName(specialtyDto.getName());
+        entity.setDescription(specialtyDto.getDescription());
+
+        var faculty = facultyRepository.findById(specialtyDto.getFacultyId())
+                .orElseThrow(() -> new NotFoundException("Faculty not found with id: " + specialtyDto.getFacultyId()));
+        entity.setFaculty(faculty);
+
+        entity = specialtyRepository.save(entity);
+
+        if (specialtyDto.getCourseIds() != null && !specialtyDto.getCourseIds().isEmpty()) {
+            var courses = courseRepository.findAllById(specialtyDto.getCourseIds());
+
+            if (courses.size() != specialtyDto.getCourseIds().size()) {
+                throw new NotFoundException("One or more courses not found for ids: " + specialtyDto.getCourseIds());
+            }
+
+            final var savedEntity = entity;
+            courses.forEach(course -> {
+                course.getSpecialties().add(savedEntity);
+                courseRepository.save(course);
+            });
+
+            entity.setCourses(courses);
+            entity = specialtyRepository.save(entity);
+        }
+
+        return specialtyMapper.entityToDto(entity);
     }
 
     /**
@@ -83,10 +113,10 @@ public class SpecialtyService {
      * @throws NotFoundException if the Specialty is not found
      */
     public void deleteSpecialty(Long id) {
-        Specialty specialty = specialtyRepository.findById(id)
+        var specialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Specialty not found with id: " + id));
         specialty.setActive(false);
-        specialty = specialtyRepository.save(specialty);
+        specialtyRepository.save(specialty);
         log.info("Deleted Specialty with id: {}", id);
     }
 

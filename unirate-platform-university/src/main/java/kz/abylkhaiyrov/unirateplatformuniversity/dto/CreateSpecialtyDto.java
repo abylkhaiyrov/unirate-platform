@@ -7,9 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SpecialtyDto {
-
-    private Long id;
+public class CreateSpecialtyDto {
 
     private String name;
 
@@ -17,6 +15,6 @@ public class SpecialtyDto {
 
     private Long facultyId;
 
-    private List<CourseDto> courses;
+    private List<Long> courseIds;
 
 }

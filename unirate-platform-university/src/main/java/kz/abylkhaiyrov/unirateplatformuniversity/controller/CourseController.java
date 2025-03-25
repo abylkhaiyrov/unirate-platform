@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.CourseDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateCourseDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class CourseController {
             }
     )
     @PostMapping
-    public CourseDto createCourse(@RequestBody CourseDto courseDto) {
+    public CourseDto createCourse(@RequestBody CreateCourseDto courseDto) {
         return courseService.create(courseDto);
     }
 

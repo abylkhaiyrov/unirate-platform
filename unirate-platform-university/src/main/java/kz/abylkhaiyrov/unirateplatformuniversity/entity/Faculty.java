@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,5 +36,11 @@ public class Faculty extends AbstractAuditEntity {
 
     @Column(name = "contact_phone")
     private String contactPhone;
+
+    @Column(name = "base_cost")
+    private Long baseCost;
+
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Specialty> specialties = new ArrayList<>();
 
 }

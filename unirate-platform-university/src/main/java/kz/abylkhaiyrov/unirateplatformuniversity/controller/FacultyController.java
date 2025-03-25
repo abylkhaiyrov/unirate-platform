@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateFacultyDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyAndSpecialityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.FacultyService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class FacultyController {
             }
     )
     @PostMapping
-    public FacultyDto createFaculty(@RequestBody FacultyDto facultyDto) {
+    public FacultyDto createFaculty(@RequestBody CreateFacultyDto facultyDto) {
         return facultyService.create(facultyDto);
     }
 
@@ -108,7 +110,7 @@ public class FacultyController {
             }
     )
     @GetMapping("/university/{universityId}")
-    public List<FacultyDto> getFacultiesByUniversityId(
+    public List<FacultyAndSpecialityDto> getFacultiesByUniversityId(
             @Parameter(description = "ID университета", required = true) @PathVariable Long universityId) {
         return facultyService.getFacultiesByUniversityId(universityId);
     }

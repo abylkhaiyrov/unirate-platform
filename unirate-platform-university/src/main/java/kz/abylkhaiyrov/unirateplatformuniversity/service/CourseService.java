@@ -2,9 +2,11 @@ package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.adapter.CourseAdapter;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.CourseDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateCourseDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Course;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.CourseRepository;
+import kz.abylkhaiyrov.unirateplatformuniversity.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class CourseService {
 
-    private final UniversityService universityService;
+    private final UniversityRepository universityRepository;
     private final CourseRepository courseRepository;
     private final CourseAdapter adapter;
 
@@ -33,7 +35,7 @@ public class CourseService {
      * @return созданный курс в виде DTO
      */
     @Transactional
-    public CourseDto create(@Valid CourseDto dto) {
+    public CourseDto create(@Valid CreateCourseDto dto) {
         log.info("Создание курса: {}", dto);
         Course entity = new Course();
         entity.setName(dto.getName());
@@ -43,7 +45,8 @@ public class CourseService {
         entity.setDurationYears(dto.getDurationYears());
         entity.setStudyMode(dto.getStudyMode());
         entity.setTuitionFee(dto.getTuitionFee());
-        entity.setUniversity(universityService.getUniversityById(dto.getUniversityId()));
+        var university = universityRepository.findById(dto.getUniversityId()).orElseThrow(() -> new NotFoundException("University not found with id: " + dto.getUniversityId()));
+        entity.setUniversity(university);
         entity = saveCourse(entity);
         return adapter.dto2Entity(entity);
     }

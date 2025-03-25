@@ -38,5 +38,5 @@ public class UniversityDto {
 
     private UniversityAddressDto universityAddress;
 
-    private List<FacultyDto> faculty;
+    private List<FacultyAndSpecialityDto> faculty;
 }

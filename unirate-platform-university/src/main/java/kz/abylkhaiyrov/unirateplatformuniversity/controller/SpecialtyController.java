@@ -1,5 +1,6 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.controller;
 
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateSpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.SpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.SpecialtyService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class SpecialtyController {
     }
 
     @PostMapping
-    public ResponseEntity<SpecialtyDto> createSpecialty(@RequestBody SpecialtyDto specialtyDto) {
+    public ResponseEntity<SpecialtyDto> createSpecialty(@RequestBody CreateSpecialtyDto specialtyDto) {
         SpecialtyDto created = specialtyService.createSpecialty(specialtyDto);
         return ResponseEntity.ok(created);
     }

@@ -7,8 +7,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
-public class FacultyDto {
-    private Long id;
+public class CreateFacultyDto {
     private String name;
     private String description;
     private String contactEmail;

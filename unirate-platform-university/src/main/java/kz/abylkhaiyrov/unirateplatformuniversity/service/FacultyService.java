@@ -1,7 +1,11 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.adapter.FacultyMapper;
+import kz.abylkhaiyrov.unirateplatformuniversity.adapter.SpecialtyMapper;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateFacultyDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyAndSpecialityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.FacultyDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.SpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Faculty;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.EmptyException;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
@@ -25,12 +29,13 @@ public class FacultyService {
     private final FacultyRepository facultyRepository;
     private final UniversityRepository universityRepository;
     private final FacultyMapper facultyMapper;
+    private final SpecialtyMapper specialtyMapper;
 
     private Faculty save(Faculty entity) {
         return facultyRepository.save(entity);
     }
 
-    public FacultyDto create(FacultyDto dto) {
+    public FacultyDto create(CreateFacultyDto dto) {
         log.info("Create faculty: {}", dto);
         var university = universityRepository.findById(dto.getUniversityId()).orElseThrow(() -> new EmptyException("University not found with id: " + dto.getUniversityId()));
         var entity = new Faculty();
@@ -40,6 +45,7 @@ public class FacultyService {
         entity.setContactPhone(dto.getContactPhoneNumber());
         entity.setUniversity(university);
         entity.setActive(true);
+        entity.setBaseCost(dto.getBaseCost());
         entity = save(entity);
         return facultyMapper.entity2Dto(entity);
     }
@@ -99,13 +105,24 @@ public class FacultyService {
      *
      * @param universityId идентификатор университета.
      */
-    public List<FacultyDto> getFacultiesByUniversityId(Long universityId) {
+    public List<FacultyAndSpecialityDto> getFacultiesByUniversityId(Long universityId) {
         log.info("Получение списка факультетов для университета с id: {}", universityId);
         return facultyRepository.findByUniversityId(universityId).stream()
                 .filter(Faculty::getActive)
-                .map(facultyMapper::entity2Dto)
+                .map(faculty -> {
+                    FacultyAndSpecialityDto dto = new FacultyAndSpecialityDto();
+                    // Маппинг данных факультета
+                    dto.setFacultyDto(facultyMapper.entity2Dto(faculty));
+                    // Получение и маппинг связанных специальностей
+                    List<SpecialtyDto> specialtyDtos = faculty.getSpecialties().stream()
+                            .map(specialtyMapper::entityToDto)
+                            .collect(Collectors.toList());
+                    dto.setSpecialtyDtos(specialtyDtos);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Активация факультета (восстановление, если был деактивирован).
