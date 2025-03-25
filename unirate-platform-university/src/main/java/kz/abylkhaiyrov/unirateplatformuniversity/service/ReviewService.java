@@ -197,7 +197,6 @@ public class ReviewService {
         dto.setStatus(review.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
-        // Получаем комментарии для отзыва
         List<ReviewCommentDto> comments = reviewCommentRepository.findByReview(review)
                 .stream()
                 .map(comment -> {

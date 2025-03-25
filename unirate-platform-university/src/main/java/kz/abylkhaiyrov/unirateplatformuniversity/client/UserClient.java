@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "AUTH-UNIRATE",
-        url = "http://localhost:8087",
+@FeignClient(name = "UNIRATE-PLATFORM-REGISTRY",
+//        url = "http://localhost:8087",
         configuration = FeignClientInterceptor.class,
         fallback = UserClientFallback.class  ,
         decode404 = true)

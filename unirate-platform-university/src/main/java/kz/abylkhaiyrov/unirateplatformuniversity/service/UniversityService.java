@@ -5,7 +5,6 @@ import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateUniversityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversitySearchDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
-import kz.abylkhaiyrov.unirateplatformuniversity.entity.UniversityAddress;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.EmptyException;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.UniversityRepository;
@@ -19,10 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -84,6 +80,18 @@ public class UniversityService {
 
         return universityRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
+    }
+
+    public UniversityDto getById(Long id){
+        if (id == null){
+            throw new EmptyException("University id cannot be null");
+        }
+
+        var entity = universityRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
     @Transactional

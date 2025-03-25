@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/open-api/reviews")
+@RequestMapping("/api/reviews")
 @Tag(name = "Review API", description = "Операции для управления отзывами")
 @RequiredArgsConstructor
 public class ReviewController {

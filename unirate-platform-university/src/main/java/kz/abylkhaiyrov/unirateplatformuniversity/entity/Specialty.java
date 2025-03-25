@@ -25,6 +25,10 @@ public class Specialty extends AbstractAuditEntity {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+
     /**
      * Многие ко многим с "Course" через промежуточную таблицу "course_specialties".
      * mappedBy="specialties" указывает, что "Specialty" описан в поле "specialties" в классе Course.
