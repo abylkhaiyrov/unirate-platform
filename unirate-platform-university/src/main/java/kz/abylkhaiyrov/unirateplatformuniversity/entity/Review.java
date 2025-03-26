@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "reviews")
@@ -22,8 +21,8 @@ public class Review extends AbstractAuditEntity {
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "university_id")
-    private University university;
+    @JoinColumn(name = "forum_id")
+    private Forum forum;
 
     private String comment;
 

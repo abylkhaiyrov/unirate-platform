@@ -21,8 +21,6 @@ create table if not exists universities(
 
 CREATE SEQUENCE universities_address_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE university_address ALTER COLUMN id SET DEFAULT nextval('universities_address_id_seq');
-SELECT last_value, is_called FROM universities_id_seq;
-ALTER SEQUENCE universities_id_seq RESTART WITH 1;
 
 CREATE SEQUENCE faculty_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE faculties ALTER COLUMN id SET DEFAULT nextval('faculty_id_seq');
@@ -97,7 +95,7 @@ create table if not exists course_specialties(
 
 create table if not exists reviews(
     id bigint primary key,
-    university_id bigint references universities(id) not null,
+    forum_id bigint references forum(id),
     user_id BIGINT NOT NULL,
     comment TEXT,
     rating SMALLINT,
@@ -125,20 +123,6 @@ CREATE TABLE review_comments (
          FOREIGN KEY (review_id) REFERENCES reviews(id)
 );
 
-create table if not exists comparison_histories(
-                                                   id      bigint primary key,
-                                                   user_id bigint,
-                                                   specialty_id bigint references specialties(id),
-    university_ids jsonb,
-    criteria jsonb,
-    created_by varchar(50),
-    created_date timestamp,
-    last_modified_by varchar(50),
-    last_modified_date timestamp,
-    active boolean
-);
-
-
 create table if not exists university_address(
 id bigint primary key,
 city varchar,
@@ -151,3 +135,18 @@ last_modified_by varchar(50),
 last_modified_date timestamp,
 active boolean
 );
+
+create table if not exists forum(
+    id bigint primary key,
+    name varchar,
+    description varchar,
+    university_id bigint REFERENCES universities(id),
+    created_by varchar(50),
+    created_date timestamp,
+    last_modified_by varchar(50),
+    last_modified_date timestamp,
+    active boolean
+);
+
+CREATE SEQUENCE forum_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE specialties ALTER COLUMN id SET DEFAULT nextval('forum_id_seq');

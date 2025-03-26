@@ -9,7 +9,7 @@ public class ReviewDto {
 
     private Long id;
 
-    private Long universityId;
+    private Long forumId;
 
     private Long userId;
 

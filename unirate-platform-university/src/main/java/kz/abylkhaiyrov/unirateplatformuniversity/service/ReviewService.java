@@ -4,9 +4,9 @@ import kz.abylkhaiyrov.unirateplatformuniversity.client.UserClient;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.*;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Review;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.ReviewComment;
-import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
 import kz.abylkhaiyrov.unirateplatformuniversity.enums.ReviewStatus;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
+import kz.abylkhaiyrov.unirateplatformuniversity.repository.ForumRepository;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.ReviewRepository;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.ReviewCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserClient userClient;
-    private final UniversityService universityService;
+    private final ForumRepository forumRepository;
 
     /**
      * Создаёт новый отзыв.
@@ -37,7 +37,8 @@ public class ReviewService {
         Review review = new Review();
         review.setComment(dto.getComment());
         review.setRating(dto.getRating());
-        review.setUniversity(universityService.getUniversityById(dto.getUniversityId()));
+        var forum = forumRepository.findById(dto.getForumId()).orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + dto.getForumId()));
+        review.setForum(forum);
         review.setUserId(dto.getUserId());
         review = saveReview(review);
         return mapToReviewReturnDto(review);
@@ -96,9 +97,9 @@ public class ReviewService {
     /**
      * Возвращает отзывы для конкретного университета с возможностью сортировки и фильтрации.
      */
-    public Page<ReviewReturnDto> getByUniversity(Long universityId, Pageable pageable) {
-        University university = universityService.getUniversityById(universityId);
-        return reviewRepository.findByUniversity(university, pageable)
+    public Page<ReviewReturnDto> getByUniversity(Long forumId, Pageable pageable) {
+        var forum = forumRepository.findById(forumId).orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + forumId));
+        return reviewRepository.findByForum(forum, pageable)
                 .map(this::mapToReviewReturnDto);
     }
 
@@ -127,9 +128,9 @@ public class ReviewService {
     /**
      * Возвращает агрегированную статистику для университета: средний рейтинг и количество отзывов.
      */
-    public UniversityReviewStats getStatsForUniversity(Long universityId) {
-        University university = universityService.getUniversityById(universityId);
-        List<Review> reviews = reviewRepository.findByUniversity(university);
+    public UniversityReviewStats getStatsForUniversity(Long forumId) {
+        var forum = forumRepository.findById(forumId).orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + forumId));
+        List<Review> reviews = reviewRepository.findByForum(forum);
         double avgRating = reviews.stream()
                 .mapToInt(r -> r.getRating() != null ? r.getRating() : 0)
                 .average()
@@ -192,8 +193,8 @@ public class ReviewService {
         dto.setRating(review.getRating());
         dto.setUserId(user.getId());
         dto.setUserName(user.getUsername());
-        dto.setUniversityId(review.getUniversity().getId());
-        dto.setUniversityName(review.getUniversity().getName());
+        dto.setForumId(review.getForum().getId());
+        dto.setForumName(review.getForum().getName());
         dto.setStatus(review.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());

@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface ReviewAdapter {
 
     @Mapping(target = "id" , source = "id")
-    @Mapping(target = "universityId", source = "university.id")
+    @Mapping(target = "forumId", source = "forum.id")
     ReviewDto toReviewDto(Review review);
 }

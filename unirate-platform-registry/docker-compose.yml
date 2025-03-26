@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   unirate-auth:
-    build: .
+    build: ./unirate-auth
     image: thqu1et/unirate-auth:latest
     ports:
       - "8087:8087"
@@ -11,13 +11,15 @@ services:
       - SPRING_DATASOURCE_PASSWORD=qwerty
     depends_on:
       - db
+
   unirate-eureka-server:
-    build: .
+    build: ./unirate-eureka-server
     image: thqu1et/unirate-eureka-server:latest
     ports:
       - "8761:8761"
+
   unirate-university:
-    build: .
+    build: ./unirate-university
     image: thqu1et/unirate-university:latest
     ports:
       - "8082:8082"
@@ -27,6 +29,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=qwerty
     depends_on:
       - db
+
   db:
     image: postgres:latest
     restart: always

@@ -10,8 +10,8 @@ import java.util.List;
 @Setter
 public class ReviewReturnDto {
     private Long id;
-    private Long universityId;
-    private String universityName;
+    private Long forumId;
+    private String forumName;
     private String comment;
     private Short rating;
     private Long userId;

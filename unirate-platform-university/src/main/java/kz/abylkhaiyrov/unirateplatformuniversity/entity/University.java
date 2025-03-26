@@ -56,9 +56,6 @@ public class University extends AbstractAuditEntity {
     @Column(name = "dormitory")
     private Boolean dormitory;
 
-    @OneToMany(mappedBy = "university")
-    private List<Review> reviews = new ArrayList<>();
-
     /**
      * Связь один ко многим (один университет - много курсов).
      * mappedBy="university" говорит, что колонка FK находится в сущности Course.
@@ -68,5 +65,8 @@ public class University extends AbstractAuditEntity {
 
     @OneToOne(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UniversityAddress universityAddress;
+
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
 }
