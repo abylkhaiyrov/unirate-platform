@@ -50,7 +50,7 @@ jobs:
             password: ${{ secrets.PASSWORD }}
             port: ${{ secrets.PORT }}
             script: |
-                rm -rf /var/www/${{ matrix.service }}
+                rm -rf /var/www/unirate-platform-${{ matrix.service }}
 
       - name: Fix permissions
         run: chmod 644 ${{ matrix.service }}.tar.gz
