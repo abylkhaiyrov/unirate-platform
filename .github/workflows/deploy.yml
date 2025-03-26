@@ -90,8 +90,8 @@ jobs:
                 -p 8087:8087 \
                 --network java-backend \
                 --name unirate-platform-registry \
-                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
-                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e SPRING_DATASOURCE_URL=jdbc:postgresql://unirate-db:5432/unirate \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://unirate-platform-eureka-server:8761/eureka  \
                 -e EUREKA_CLIENT_FETCHREGISTRY=true \
                 -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
                 -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
@@ -104,8 +104,8 @@ jobs:
                 -p 8082:8082 \
                 --network java-backend \
                 --name unirate-platform-university \
-                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
-                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e SPRING_DATASOURCE_URL=jdbc:postgresql://unirate-db:5432/unirate \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://unirate-platform-eureka-server:8761/eureka  \
                 -e EUREKA_CLIENT_FETCHREGISTRY=true \
                 -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
                 -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
@@ -125,7 +125,7 @@ jobs:
                 -p 8081:8081 \
                 --network java-backend \
                 --name unirate-platform-api-gateway \
-                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://unirate-platform-eureka-server:8761/eureka  \
                 -e EUREKA_CLIENT_FETCHREGISTRY=true \
                 -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
                 -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
