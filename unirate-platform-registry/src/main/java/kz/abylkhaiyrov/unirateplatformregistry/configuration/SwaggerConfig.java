@@ -19,7 +19,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .servers(
                         List.of(
-                                new Server().url("http://localhost:8087")
+                                new Server().url("http://localhost:8087"),
+                                new Server().url("https://unirate.kz/registry")
                         )
                 )
                 .info(
