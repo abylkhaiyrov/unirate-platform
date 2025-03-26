@@ -117,7 +117,7 @@ jobs:
               docker run -d --restart=always \
                 -p 8761:8761 \
                 --network java-backend \
-                --name eureka-server \
+                --name unirate-platform-eureka-server \
                 unirate-platform-eureka-server
               ;;
               unirate-platform-api-gateway)
