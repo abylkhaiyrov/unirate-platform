@@ -9,7 +9,6 @@ import kz.abylkhaiyrov.unirateplatformuniversity.adapter.UniversityAdapter;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateUniversityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversitySearchDto;
-import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
