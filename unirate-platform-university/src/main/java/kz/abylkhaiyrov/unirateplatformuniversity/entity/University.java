@@ -67,6 +67,6 @@ public class University extends AbstractAuditEntity {
     private UniversityAddress universityAddress;
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    private List<Forum> forums = new ArrayList<>();
 
 }

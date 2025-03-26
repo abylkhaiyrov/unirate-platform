@@ -33,4 +33,5 @@ public class Forum extends AbstractAuditEntity {
 
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
 }
