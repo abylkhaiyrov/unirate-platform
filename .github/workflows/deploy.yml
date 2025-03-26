@@ -34,21 +34,13 @@ jobs:
       - name: Build JAR and Docker Image for ${{ matrix.service }}
         run: |
           cd unirate-platform-${{ matrix.service }}
-          ./gradlew clean build
+          mvn clean package -DskipTests
           docker build -t ${{ matrix.service }}:latest .
 
       # Сохранение Docker image в файл
       - name: Save Docker Image
         run: |
           docker save ${{ matrix.service }}:latest -o ${{ matrix.service }}.tar.gz
-
-      - name: Knock on server ports
-        run: |
-          echo "Knocking on ports..."
-          for port in 1999 2030; do
-            echo -n " " | nc -w1 ${{ secrets.HOST }} $port || true
-            sleep 1
-          done
 
       - name: Remove old folder on server
         uses: appleboy/ssh-action@master
@@ -133,7 +125,6 @@ jobs:
                 -p 8081:8081 \
                 --network java-backend \
                 --name api-gateway \
-                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
                 -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
                 -e EUREKA_CLIENT_FETCHREGISTRY=true \
                 -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
