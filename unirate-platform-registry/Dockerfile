@@ -6,4 +6,4 @@ COPY target/unirate-platform-registry-0.0.1-SNAPSHOT.jar /app/unirate-platform-r
 
 EXPOSE 8087
 
-ENTRYPOINT ["java", "-jar", "/app/unirate-platform-api-gateway.jar"]
+ENTRYPOINT ["java", "-jar", "/app/unirate-platform-registry.jar"]

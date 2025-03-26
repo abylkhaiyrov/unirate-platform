@@ -6,4 +6,4 @@ COPY target/unirate-platform-university-0.0.1-SNAPSHOT.jar /app/unirate-platform
 
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "/app/unirate-platform-api-gateway.jar"]
+ENTRYPOINT ["java", "-jar", "/app/unirate-platform-university.jar"]
