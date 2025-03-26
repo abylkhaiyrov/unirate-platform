@@ -34,7 +34,7 @@ jobs:
       - name: Build JAR and Docker Image for ${{ matrix.service }}
         run: |
           cd unirate-platform-${{ matrix.service }}
-          ./gradlew clean build
+          mvn clean package
           docker build -t ${{ matrix.service }}:latest .
 
       # Сохранение Docker image в файл
