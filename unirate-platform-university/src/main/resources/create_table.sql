@@ -17,7 +17,7 @@ create table if not exists universities(
                                            military_department boolean,
                                            dormitory boolean,
     active boolean
-    );
+);
 
 CREATE SEQUENCE universities_address_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE university_address ALTER COLUMN id SET DEFAULT nextval('universities_address_id_seq');

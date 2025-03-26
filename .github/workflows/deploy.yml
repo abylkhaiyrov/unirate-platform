@@ -1,0 +1,143 @@
+name: CI/CD for Microservices
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          [
+            api-gateway,
+            eureka-server,
+            registry,
+            university,
+          ]
+
+    steps:
+      # Checkout репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Установка JDK (для сборки Java проектов)
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      # Сборка JAR и Docker image
+      - name: Build JAR and Docker Image for ${{ matrix.service }}
+        run: |
+          cd unirate-platform-${{ matrix.service }}
+          ./gradlew clean build
+          docker build -t ${{ matrix.service }}:latest .
+
+      # Сохранение Docker image в файл
+      - name: Save Docker Image
+        run: |
+          docker save ${{ matrix.service }}:latest -o ${{ matrix.service }}.tar.gz
+
+      - name: Remove old folder on server
+        uses: appleboy/ssh-action@master
+        with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            script: |
+                rm -rf /var/www/${{ matrix.service }}
+
+      - name: Fix permissions
+        run: chmod 644 ${{ matrix.service }}.tar.gz
+
+      - name: List files
+        run: |
+          ls -la
+
+      # Копирование Docker image на сервер
+      - name: Copy Docker Image to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          source: "${{ matrix.service }}.tar.gz"
+          target: "/var/www/${{ matrix.service }}/"
+
+      # Деплой Docker-контейнера на сервере
+      - name: Deploy and Restart Application
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/${{ matrix.service }}/
+            docker rm -f $(docker ps -a -q --filter ancestor=${{ matrix.service }}) || true
+            docker rmi -f ${{ matrix.service }} || true
+            docker load < ${{ matrix.service }}.tar.gz
+            
+            case ${{ matrix.service }} in
+              registry)
+              docker run -d --restart=always \
+                -p 8087:8087 \
+                --network java-backend \
+                --name registry \
+                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e EUREKA_CLIENT_FETCHREGISTRY=true \
+                -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
+                -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
+                -e EUREKA_INSTANCE_HOSTNAME=localhost \
+                -e EUREKA_HEALTH_ENABLED=true \
+                registry
+              ;;
+              university)
+              docker run -d --restart=always \
+                -p 8082:8082 \
+                --network java-backend \
+                --name university \
+                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e EUREKA_CLIENT_FETCHREGISTRY=true \
+                -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
+                -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
+                -e EUREKA_INSTANCE_HOSTNAME=localhost \
+                -e EUREKA_HEALTH_ENABLED=true \
+                university
+              ;;
+              eureka-server)
+              docker run -d --restart=always \
+                -p 8761:8761 \
+                --network java-backend \
+                --name eureka-server \
+                eureka-server
+              ;;
+              api-gateway)
+              docker run -d --restart=always \
+                -p 8081:8081 \
+                --network java-backend \
+                --name api-gateway \
+                -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/unirate \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka  \
+                -e EUREKA_CLIENT_FETCHREGISTRY=true \
+                -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
+                -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
+                -e EUREKA_INSTANCE_HOSTNAME=localhost \
+                -e EUREKA_HEALTH_ENABLED=true \
+                api-gateway
+              ;;
+              *)
+              # Если вдруг появится новый сервис, он сюда попадёт.
+              exit 1
+              ;;
+            esac
+      
+              
