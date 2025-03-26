@@ -34,13 +34,21 @@ jobs:
       - name: Build JAR and Docker Image for ${{ matrix.service }}
         run: |
           cd unirate-platform-${{ matrix.service }}
-          mvn clean package -DskipTests
+          ./gradlew clean build
           docker build -t ${{ matrix.service }}:latest .
 
       # Сохранение Docker image в файл
       - name: Save Docker Image
         run: |
           docker save ${{ matrix.service }}:latest -o ${{ matrix.service }}.tar.gz
+
+      - name: Knock on server ports
+        run: |
+          echo "Knocking on ports..."
+          for port in 1999 2030; do
+            echo -n " " | nc -w1 ${{ secrets.HOST }} $port || true
+            sleep 1
+          done
 
       - name: Remove old folder on server
         uses: appleboy/ssh-action@master
