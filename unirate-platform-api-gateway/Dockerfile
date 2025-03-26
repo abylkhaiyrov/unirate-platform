@@ -2,7 +2,7 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY build/libs/unirate-platform-api-gateway-0.0.1-SNAPSHOT.jar /app/unirate-platform-api-gateway.jar
+COPY target/unirate-platform-api-gateway-0.0.1-SNAPSHOT.jar /app/unirate-platform-api-gateway.jar
 
 EXPOSE 8081
 
