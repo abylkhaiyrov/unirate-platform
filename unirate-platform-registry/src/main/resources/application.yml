@@ -28,9 +28,28 @@ spring:
   jwt:
     secret: 8ac9dde390d3f6d48dba56ba14c37c26fd86af433abc08d174e35b951a713990
 server:
-#  servlet:
-#    context-path: /api/v1/user/
+  servlet:
+    context-path: /registry
   port: 8087
+
+springdoc:
+  openapi:
+    info:
+      title: "Rest API for user-registry for UniRate Platform Registry"
+      version: "1.0"
+    servers:
+      - url: "http://localhost:8082"
+        description: "Local Server Running"
+      - url: "https://unirate.kz/registry"
+        description: "Prod Server Running"
+    components:
+      securitySchemes:
+        bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+    security:
+      - bearerAuth: []
 
 logging:
   level:

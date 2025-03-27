@@ -15,7 +15,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   jwt:
     secret: 8ac9dde390d3f6d48dba56ba14c37c26fd86af433abc08d174e35b951a713990
+
 server:
+  servlet:
+    context-path: /university
   port: 8082
 
 springdoc:
