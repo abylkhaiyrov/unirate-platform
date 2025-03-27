@@ -208,6 +208,7 @@ public class UniversityService {
 
         Specification<University> spec = Specification.where(null);
 
+        // Фильтрация по поисковому слову (в имени или описании)
         if (searchDto.getSearchFiled() != null && !searchDto.getSearchFiled().isEmpty()) {
             spec = spec.and((root, query, builder) ->
                     builder.or(
@@ -216,35 +217,46 @@ public class UniversityService {
                     )
             );
         }
+
+        // Фильтрация по городу (через join с адресом университета)
         if (StringUtils.isNotEmpty(searchDto.getCity())) {
-            var city = searchDto.getCity();
+            String city = searchDto.getCity();
             spec = spec.and((root, query, builder) -> {
+                // Выполняем left join с таблицей адресов
                 var addressJoin = root.join("universityAddress", JoinType.LEFT);
                 return builder.like(builder.lower(addressJoin.get("city")), lowerSqlLike(city));
             });
         }
+
+        // Фильтрация по стоимости обучения: baseCost >= minTuition
         if (searchDto.getMinTuition() != null) {
             spec = spec.and((root, query, builder) ->
                     builder.ge(root.get("baseCost"), searchDto.getMinTuition()));
         }
+
+        // Фильтрация по стоимости обучения: baseCost <= maxTuition
         if (searchDto.getMaxTuition() != null) {
             spec = spec.and((root, query, builder) ->
                     builder.le(root.get("baseCost"), searchDto.getMaxTuition()));
         }
 
+        // Фильтрация по наличию военной кафедры
         if (searchDto.getHasMilitaryDepartment() != null) {
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("militaryDepartment"), searchDto.getHasMilitaryDepartment()));
         }
 
+        // Фильтрация по наличию общежития
         if (searchDto.getHasDormitory() != null) {
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("dormitory"), searchDto.getHasDormitory()));
         }
 
+        // Фильтрация по рейтингу. Согласно вашему примеру SQL:
+        // условие: us.rating <= rating
         if (searchDto.getRating() > 0) {
             spec = spec.and((root, query, builder) ->
-                    builder.ge(root.get("rating"), searchDto.getRating()));
+                    builder.le(root.get("rating"), searchDto.getRating()));
         }
 
         Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.DESC, "rating"));
@@ -253,9 +265,9 @@ public class UniversityService {
                 .map(entity -> {
                     var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
                             .orElse(null);
-            var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
-            return adapter.entity2Dto(entity, universityAddress, faculty);
-        });
+                    var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
+                    return adapter.entity2Dto(entity, universityAddress, faculty);
+                });
     }
 
     public List<UniversityDto> getTopUniversities(int limit) {
