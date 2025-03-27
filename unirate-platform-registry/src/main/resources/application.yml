@@ -30,6 +30,7 @@ spring:
 server:
   servlet:
     context-path: /registry
+  forward-headers-strategy: native
   port: 8087
 
 springdoc:
