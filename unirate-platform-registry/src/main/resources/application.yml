@@ -48,6 +48,8 @@ springdoc:
           bearerFormat: JWT
     security:
       - bearerAuth: []
+  swagger-ui:
+    display-url: https://unirate.kz/registry
 
 logging:
   level:

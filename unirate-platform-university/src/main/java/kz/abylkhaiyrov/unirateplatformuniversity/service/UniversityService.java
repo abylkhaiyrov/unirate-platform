@@ -91,7 +91,11 @@ public class UniversityService {
                 .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
-        return adapter.entity2Dto(entity, universityAddress, faculty);
+
+        if (Objects.nonNull(universityAddress) && Objects.nonNull(faculty)){
+            return adapter.entity2Dto(entity, universityAddress, faculty);
+        }
+        return adapter.entity2Dto(entity);
     }
 
     @Transactional
