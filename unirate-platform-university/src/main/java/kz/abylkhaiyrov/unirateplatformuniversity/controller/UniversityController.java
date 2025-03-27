@@ -24,7 +24,6 @@ import java.util.List;
 public class UniversityController {
 
     private final UniversityService universityService;
-    private final UniversityAdapter universityAdapter;
 
     @Operation(
             summary = "Создание нового университета",
