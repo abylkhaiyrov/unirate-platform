@@ -68,7 +68,8 @@ public class UniversityService {
 
         var entity = universityRepository.findByNameContainingIgnoreCase(name)
                 .orElseThrow(() -> new NotFoundException("University not found with name: " + name));
-        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + entity.getId()));
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
         return adapter.entity2Dto(entity, universityAddress, faculty);
     }
@@ -89,13 +90,10 @@ public class UniversityService {
 
         var entity = universityRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
-        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + id));
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
-
-        if (Objects.nonNull(universityAddress) && Objects.nonNull(faculty)){
-            return adapter.entity2Dto(entity, universityAddress, faculty);
-        }
-        return adapter.entity2Dto(entity);
+        return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
     @Transactional
@@ -137,7 +135,8 @@ public class UniversityService {
         var list = universityRepository.findAll();
         return list.stream()
                 .map(entity -> {
-                    var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+                    var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                            .orElseThrow(() -> new NotFoundException("University address not found with university id: " + entity.getId()));
                     var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
                     return adapter.entity2Dto(entity, universityAddress, faculty);
                 })
@@ -147,7 +146,8 @@ public class UniversityService {
     public Page<UniversityDto> getUniversitiesByPage(Pageable pageable) {
         return universityRepository.findAllByActiveTrue(pageable)
                 .map(entity -> {
-                    var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+                    var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                            .orElseThrow(() -> new NotFoundException("University address not found with university id: " + entity.getId()));
                     var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
                     return adapter.entity2Dto(entity, universityAddress, faculty);
                 });
@@ -187,7 +187,8 @@ public class UniversityService {
         }
         saveUniversity(entity);
         log.info("University updated: {}", entity);
-        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + id));
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
         return adapter.entity2Dto(entity, universityAddress, faculty);
     }
@@ -250,7 +251,8 @@ public class UniversityService {
 
         return universityRepository.findAll(spec, pageable)
                 .map(entity -> {
-            var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+                    var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                            .orElseThrow(() -> new NotFoundException("University address not found with university id: " + entity.getId()));
             var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
             return adapter.entity2Dto(entity, universityAddress, faculty);
         });
@@ -261,7 +263,8 @@ public class UniversityService {
         log.info("Getting top {} universities by rating", limit);
         var page = universityRepository.findAllByActiveTrue(pageable);
         return page.getContent().stream().map(entity -> {
-            var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+            var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                    .orElseThrow(() -> new NotFoundException("University address not found with university id: " + entity.getId()));
             var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
             return adapter.entity2Dto(entity, universityAddress, faculty);
         }).collect(Collectors.toList());
@@ -273,7 +276,8 @@ public class UniversityService {
         log.info("Updating logo for university with id: {}", id);
         entity.setLogoUrl(logoUrl);
         saveUniversity(entity);
-        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + id));
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
         return adapter.entity2Dto(entity, universityAddress, faculty);
     }
@@ -284,7 +288,8 @@ public class UniversityService {
         log.info("Setting active status of university with id: {} to {}", id, active);
         entity.setActive(active);
         saveUniversity(entity);
-        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId());
+        var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
+                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + id));
         var faculty = facultyService.getFacultiesByUniversityId(entity.getId());
         return adapter.entity2Dto(entity, universityAddress, faculty);
     }

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -78,8 +80,7 @@ public class UniversityAddressService {
         saveAddress(existing);
     }
 
-    public UniversityAddress getUniversityAddressByUniversityId(Long universityId) {
-        return universityAddressRepository.findByUniversityId(universityId)
-                .orElseThrow(() -> new NotFoundException("University address not found with university id: " + universityId));
+    public Optional<UniversityAddress> getUniversityAddressByUniversityId(Long universityId) {
+        return universityAddressRepository.findByUniversityId(universityId);
     }
 }
