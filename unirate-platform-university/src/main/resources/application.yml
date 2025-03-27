@@ -18,6 +18,13 @@ spring:
 server:
   port: 8082
 
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    url: .
+  api-docs:
+    path: /v3/api-docs/
+
 logging:
   level:
     ROOT: INFO
