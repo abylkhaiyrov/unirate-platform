@@ -19,11 +19,23 @@ server:
   port: 8082
 
 springdoc:
-  swagger-ui:
-    disable-swagger-default-url: true
-    url: .
-  api-docs:
-    path: /v3/api-docs/
+  openapi:
+    info:
+      title: "Rest API for University for UniRate Platform University"
+      version: "1.0"
+    servers:
+      - url: "http://localhost:8082"
+        description: "Local Server Running"
+      - url: "https://unirate.kz/university"
+        description: "Prod Server Running"
+    components:
+      securitySchemes:
+        bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+    security:
+      - bearerAuth: []
 
 logging:
   level:

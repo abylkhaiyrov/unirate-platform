@@ -24,7 +24,7 @@ public class SwaggerConfig {
                         )
                 )
                 .info(
-                        new Info().title("Rest API for User-Registration for UniRate Platform Registry")
+                        new Info().title("Rest API for University for UniRate Platform University")
                 )
                 .components(new Components().addSecuritySchemes("bearerAuth",
                         new SecurityScheme()
