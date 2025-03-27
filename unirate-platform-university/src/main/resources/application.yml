@@ -19,6 +19,7 @@ spring:
 server:
   servlet:
     context-path: /university
+  forward-headers-strategy: native
   port: 8082
 
 springdoc:
