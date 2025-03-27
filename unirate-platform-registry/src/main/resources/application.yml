@@ -38,8 +38,6 @@ springdoc:
       title: "Rest API for user-registry for UniRate Platform Registry"
       version: "1.0"
     servers:
-      - url: "http://localhost:8082"
-        description: "Local Server Running"
       - url: "https://unirate.kz/registry"
         description: "Prod Server Running"
     components:
