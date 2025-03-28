@@ -31,12 +31,12 @@ public class AuthService {
     private final MailSender mailSender;
 
     public LoginDto login(LoginDto authLoginDto) {
-        var userDetails = personDetailsService.loadUserByUsername(authLoginDto.getLoginName());
+        var userDetails = personDetailsService.loadUserByUsername(authLoginDto.getEmail());
         if (!passwordEncoder.matches(authLoginDto.getPassword(), userDetails.getPassword())) {
             throw new IllegalArgumentException("Password was incorrect");
         }
 
-        authLoginDto.setToken(jwtUtil.generateToken(authLoginDto.getLoginName()));
+        authLoginDto.setToken(jwtUtil.generateToken(authLoginDto.getEmail()));
         return authLoginDto;
     }
 
