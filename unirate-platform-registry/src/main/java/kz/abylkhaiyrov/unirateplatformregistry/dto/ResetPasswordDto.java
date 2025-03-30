@@ -7,20 +7,20 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class ResetPasswordDto extends LoginInterceptor {
+public class ResetPasswordDto {
 
     @NotNull
     private String newPassword;
     @NotNull
     private String email;
 
-    public ResetPasswordDto(String newPassword, String email) {
-        super(email);
-        this.email = email;
-        this.newPassword = newPassword;
-    }
-
-    public String getEmail() {
-        return super.getEmail();
-    }
+//    public ResetPasswordDto(String newPassword, String email) {
+//        super(email);
+//        this.email = email;
+//        this.newPassword = newPassword;
+//    }
+//
+//    public String getEmail() {
+//        return super.getEmail();
+//    }
 }
