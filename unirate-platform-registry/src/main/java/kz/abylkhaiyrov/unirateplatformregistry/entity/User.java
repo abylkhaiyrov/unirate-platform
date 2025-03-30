@@ -47,6 +47,7 @@ public class User extends AbstractAuditingEntity {
     private String telephone;
 
     @Column(name = "user_status")
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     @Column(name = "active")
