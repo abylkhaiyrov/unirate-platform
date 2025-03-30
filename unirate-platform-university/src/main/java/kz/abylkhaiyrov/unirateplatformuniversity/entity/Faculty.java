@@ -1,6 +1,7 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.entity;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.AbstractAudit.AbstractAuditEntity;
+import kz.abylkhaiyrov.unirateplatformuniversity.enums.CommonName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,6 +40,10 @@ public class Faculty extends AbstractAuditEntity {
 
     @Column(name = "base_cost")
     private Long baseCost;
+
+    @Column(name = "common_name")
+    @Enumerated(EnumType.STRING)
+    private CommonName commonName;
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Specialty> specialties = new ArrayList<>();

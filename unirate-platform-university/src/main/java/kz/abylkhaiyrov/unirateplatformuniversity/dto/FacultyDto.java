@@ -1,5 +1,6 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.dto;
 
+import kz.abylkhaiyrov.unirateplatformuniversity.enums.CommonName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,5 @@ public class FacultyDto {
     private String contactPhoneNumber;
     private Long baseCost;
     private Long universityId;
+    private CommonName commonName;
 }

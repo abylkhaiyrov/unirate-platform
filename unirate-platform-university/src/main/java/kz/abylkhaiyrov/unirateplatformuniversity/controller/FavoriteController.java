@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateFavoriteDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityComparisonDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityComparisonRequestDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityFavDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
@@ -60,4 +62,18 @@ public class FavoriteController {
             @Parameter(description = "ID избранного", required = true) @PathVariable Long id) {
         favoriteService.deleteById(id);
     }
+
+    @Operation(
+            summary = "Поиск сравнения университетов",
+            description = "Возвращает список сравнения университетов по заданным критериям",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Сравнение успешно выполнено", content = @Content(mediaType = "application/json"))
+            }
+    )
+    @PostMapping("/comparison/filter")
+    public List<UniversityComparisonDto> searchUniversityComparison(
+            @RequestBody UniversityComparisonRequestDto requestDto) {
+        return favoriteService.searchUniversityComparison(requestDto);
+    }
+
 }

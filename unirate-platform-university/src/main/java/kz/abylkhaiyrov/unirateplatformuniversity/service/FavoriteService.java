@@ -2,8 +2,12 @@ package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.adapter.UniversityAdapter;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateFavoriteDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityComparisonDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityComparisonRequestDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityFavDto;
+import kz.abylkhaiyrov.unirateplatformuniversity.entity.Faculty;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Favorite;
+import kz.abylkhaiyrov.unirateplatformuniversity.entity.University;
 import kz.abylkhaiyrov.unirateplatformuniversity.exception.NotFoundException;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.FavoriteRepository;
 import kz.abylkhaiyrov.unirateplatformuniversity.repository.UniversityAddressRepository;
@@ -12,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +32,7 @@ public class FavoriteService {
     private final UniversityAdapter universityAdapter;
     private final UniversityAddressRepository universityAddressRepository;
     private final FacultyService facultyService;
+    private final EntityManager entityManager;
 
     public UniversityFavDto createFavorite(CreateFavoriteDto dto) {
         log.info("Create favorite with dto: {}", dto.toString());
@@ -61,6 +69,51 @@ public class FavoriteService {
     public void deleteById(Long id) {
         log.info("Delete favorite by id: {}", id);
         favoriteRepository.deleteById(id);
+    }
+
+    public List<UniversityComparisonDto> searchUniversityComparison(UniversityComparisonRequestDto requestDto) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UniversityComparisonDto> cq = cb.createQuery(UniversityComparisonDto.class);
+
+        Root<Favorite> favoritesRoot = cq.from(Favorite.class);
+
+        Join<Favorite, University> universityJoin = favoritesRoot.join("universities", JoinType.LEFT);
+        Join<University, Faculty> facultyJoin = universityJoin.join("faculties", JoinType.LEFT);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Фильтр по userId
+        predicates.add(cb.equal(favoritesRoot.get("user_id"), requestDto.getUserId()));
+
+        // Фильтр по списку идентификаторов университетов, если переданы
+        if (requestDto.getUniversityIds() != null && !requestDto.getUniversityIds().isEmpty()) {
+            predicates.add(universityJoin.get("id").in(requestDto.getUniversityIds()));
+        }
+
+        // Фильтр по именам университетов
+        if (requestDto.getUniversityName() != null && !requestDto.getUniversityName().isEmpty()) {
+            predicates.add(universityJoin.get("name").in(requestDto.getUniversityName()));
+        }
+
+        // Фильтр по общему названию факультета (CommonName enum)
+        if (requestDto.getCommonName() != null && !requestDto.getCommonName().isEmpty()) {
+            predicates.add(facultyJoin.get("commonName").in(requestDto.getCommonName()));
+        }
+
+        // Проекция в DTO с нужными полями
+        cq.select(cb.construct(
+                        UniversityComparisonDto.class,
+                        universityJoin.get("name"),             // universityName
+                        universityJoin.get("rating"),             // rating
+                        facultyJoin.get("baseCost"),           // baseCost
+                        universityJoin.get("militaryDepartment"), // militaryDepartment
+                        universityJoin.get("dormitory"),          // dormitory
+                        facultyJoin.get("name")                   // facultyName
+                ))
+                .where(cb.and(predicates.toArray(new Predicate[0])))
+                .distinct(true);
+
+        return entityManager.createQuery(cq).getResultList();
     }
 
 }

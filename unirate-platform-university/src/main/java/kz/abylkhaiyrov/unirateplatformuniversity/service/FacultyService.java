@@ -46,6 +46,7 @@ public class FacultyService {
         entity.setUniversity(university);
         entity.setActive(true);
         entity.setBaseCost(dto.getBaseCost());
+        entity.setCommonName(dto.getCommonName());
         entity = save(entity);
         return facultyMapper.entity2Dto(entity);
     }
@@ -77,6 +78,7 @@ public class FacultyService {
         updateIfChanged(entity::getDescription, entity::setDescription, dto.getDescription());
         updateIfChanged(entity::getContactEmail, entity::setContactEmail, dto.getContactEmail());
         updateIfChanged(entity::getContactPhone, entity::setContactPhone, dto.getContactPhoneNumber());
+        updateIfChanged(entity::getCommonName, entity::setCommonName, dto.getCommonName());
 
         save(entity);
         return facultyMapper.entity2Dto(entity);
