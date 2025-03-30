@@ -46,6 +46,7 @@ public class User extends AbstractAuditingEntity {
     @Column(name = "telephone_number")
     private String telephone;
 
+    @Column(name = "user_status")
     private UserStatus status;
 
     @Column(name = "active")

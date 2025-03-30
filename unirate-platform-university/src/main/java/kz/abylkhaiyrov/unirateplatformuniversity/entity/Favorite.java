@@ -15,7 +15,7 @@ public class Favorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_id_seq")
-    @SequenceGenerator(name = "favorite_id_seq", sequenceName = "favorite_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "favorite_id_seq", sequenceName = "favorites_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "user_id", nullable = false)
