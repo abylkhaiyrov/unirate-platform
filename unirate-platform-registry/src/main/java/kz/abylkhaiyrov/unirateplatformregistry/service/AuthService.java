@@ -59,7 +59,7 @@ public class AuthService {
 
     @Transactional
     public void resetPassword(ResetPasswordDto dto) {
-        var activeByLogin = userService.findActiveByEmail(dto.getLogin());
+        var activeByLogin = userService.findActiveByEmail(dto.getEmail());
         if (activeByLogin.isEmpty()) {
             throw new IllegalArgumentException("User is not present");
         }

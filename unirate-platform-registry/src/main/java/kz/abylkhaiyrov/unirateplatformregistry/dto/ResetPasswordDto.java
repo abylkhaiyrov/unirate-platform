@@ -12,15 +12,15 @@ public class ResetPasswordDto extends LoginInterceptor {
     @NotNull
     private String newPassword;
     @NotNull
-    private String login;
+    private String email;
 
-    public ResetPasswordDto(String newPassword, String login) {
-        super(login);
-        this.login = login;
+    public ResetPasswordDto(String newPassword, String email) {
+        super(email);
+        this.email = email;
         this.newPassword = newPassword;
     }
 
-    public String getLogin() {
-        return super.getLogin();
+    public String getEmail() {
+        return super.getEmail();
     }
 }

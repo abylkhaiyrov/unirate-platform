@@ -5,18 +5,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class LoginInterceptor {
 
-    private String login;
+    private String email;
 
     public LoginInterceptor(String login) {
-        this.login = login;
+        this.email = email;
     }
 
-    public String getLogin() {
-        if (this.login == null) {
+    public String getEmail() {
+        if (this.email == null) {
             return "";
         }
-        int i = this.login.indexOf("@");
-        return this.login.substring(0, i);
+        int i = this.email.indexOf("@");
+        return this.email.substring(0, i);
     }
 
 }
