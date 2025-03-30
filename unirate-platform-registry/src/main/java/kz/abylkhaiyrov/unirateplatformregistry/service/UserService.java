@@ -73,12 +73,16 @@ public class UserService {
             user.setLastName(userDto.getLastName());
         }
         if (Objects.nonNull(userDto.getTelephone()) && (user.getTelephone() == null ||
-                !user.getLastName().equals(userDto.getTelephone()))) {
+                !user.getTelephone().equals(userDto.getTelephone()))) {
             user.setTelephone(userDto.getTelephone());
         }
         if (Objects.nonNull(userDto.getEmail()) && (user.getEmail() == null ||
-                !user.getLastName().equals(userDto.getEmail()))) {
+                !user.getEmail().equals(userDto.getEmail()))) {
             user.setEmail(userDto.getEmail());
+        }
+        if (Objects.nonNull(userDto.getStatus()) && (user.getStatus() == null ||
+                !user.getStatus().equals(userDto.getStatus()))) {
+            user.setStatus(userDto.getStatus());
         }
 
         User save = userRepository.save(user);

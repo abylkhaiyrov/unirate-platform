@@ -1,6 +1,7 @@
 package kz.abylkhaiyrov.unirateplatformregistry.dto;
 
 import kz.abylkhaiyrov.unirateplatformregistry.enums.Role;
+import kz.abylkhaiyrov.unirateplatformregistry.enums.UserStatus;
 import lombok.*;
 
 import lombok.Getter;
@@ -27,5 +28,5 @@ public class UserDto {
     @Pattern(regexp = "^(?:\\+7|8)7\\d{9}$", message = "Telephone number should in format: +77764268111 or " +
             "87764268111")
     private String telephone;
-
+    private UserStatus status;
 }

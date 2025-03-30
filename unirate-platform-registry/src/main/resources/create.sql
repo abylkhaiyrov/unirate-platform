@@ -61,3 +61,6 @@ VALUES (nextval('role_id_seq'), 'system', now(), 'ADMIN', 'Админ', false);
 
 INSERT INTO role(id, created_by, created_date, code, ru, deleted)
 VALUES (nextval('role_id_seq'), 'system', now(), 'USER', 'Пользователь', false);
+
+alter table _user
+    add column user_status character varying(50);

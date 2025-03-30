@@ -1,6 +1,7 @@
 package kz.abylkhaiyrov.unirateplatformregistry.entity;
 
 import kz.abylkhaiyrov.unirateplatformregistry.entity.AbstractAudit.AbstractAuditingEntity;
+import kz.abylkhaiyrov.unirateplatformregistry.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,6 +45,8 @@ public class User extends AbstractAuditingEntity {
 
     @Column(name = "telephone_number")
     private String telephone;
+
+    private UserStatus status;
 
     @Column(name = "active")
     private boolean isActive = false;

@@ -123,6 +123,13 @@ public class FacultyService {
                 .collect(Collectors.toList());
     }
 
+    public List<FacultyDto> getAllFacultiesByUniversityId(Long universityId) {
+        log.info("get all faculties with university id: {}", universityId);
+        return facultyRepository.findByUniversityId(universityId)
+                .stream()
+                .map(facultyMapper::entity2Dto)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Активация факультета (восстановление, если был деактивирован).

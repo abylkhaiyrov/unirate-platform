@@ -150,3 +150,16 @@ create table if not exists forum(
 
 CREATE SEQUENCE forum_id_seq START WITH 1 INCREMENT BY 1;
 ALTER TABLE specialties ALTER COLUMN id SET DEFAULT nextval('forum_id_seq');
+
+CREATE TABLE favorites (
+                           id bigint PRIMARY KEY,
+                           user_id bigint NOT NULL,
+                           university_id bigint NOT NULL,
+                           CONSTRAINT fk_university
+                               FOREIGN KEY (university_id)
+                                   REFERENCES universities (id)
+                                   ON DELETE CASCADE
+);
+
+CREATE SEQUENCE favorites_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE favorites ALTER COLUMN id SET DEFAULT nextval('favorites_id_seq');
