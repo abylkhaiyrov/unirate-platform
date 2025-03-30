@@ -26,7 +26,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> findActiveByEmail(String login) {
-        return userRepository.findByEmailAndIsActiveTrue(login);
+        return userRepository.findByEmailAndActiveTrue(login);
     }
 
     @Transactional

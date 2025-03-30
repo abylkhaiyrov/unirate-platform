@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByActivationCode(Integer code);
 
-    Optional<User> findByEmailAndIsActiveTrue(String email);
+    Optional<User> findByEmailAndActiveTrue(String email);
 
     Optional<User> findByEmailAndIsDeletedFalseAndIsActiveTrue(String login);
 }
