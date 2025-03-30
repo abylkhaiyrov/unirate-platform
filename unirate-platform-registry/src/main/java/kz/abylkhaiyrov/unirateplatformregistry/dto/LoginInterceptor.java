@@ -8,7 +8,7 @@ public abstract class LoginInterceptor {
     private String email;
 
     public LoginInterceptor(String login) {
-        this.email = email;
+        this.email = login;
     }
 
     public String getEmail() {
