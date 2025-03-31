@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
+        name = "UNIRATE-PLATFORM-REGISTRY",
         url = "https://unirate.kz",
         configuration = FeignClientInterceptor.class,
         fallback = UserClientFallback.class  ,
