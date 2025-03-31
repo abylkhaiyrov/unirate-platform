@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
         name = "UNIRATE-PLATFORM-REGISTRY",
         configuration = FeignClientInterceptor.class,
         fallback = UserClientFallback.class  ,
-        decode404 = true)
+        decode404 = true,
+        path = "/registry"
+//        url = "${UNIRATE-PLATFORM-REGISTRY_URL:http://localhost:8087}"
+)
 public interface UserClient {
 
     @GetMapping(value = "/api/user/{id}")

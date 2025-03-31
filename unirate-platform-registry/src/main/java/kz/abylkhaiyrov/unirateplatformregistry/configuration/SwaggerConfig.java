@@ -19,7 +19,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .servers(
                         List.of(
-                                new Server().url("https://unirate.kz/registry").description("Prod Server Running")
+                                new Server().url("https://unirate.kz/registry").description("Prod Server Running"),
+                                new Server().url("http://localhost:8087/registry").description("Test Server Running")
                         )
                 )
                 .info(
