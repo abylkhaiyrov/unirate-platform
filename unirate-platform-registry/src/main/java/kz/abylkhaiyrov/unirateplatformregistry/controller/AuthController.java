@@ -26,7 +26,7 @@ public class AuthController {
     @Operation(summary = "Авторизация пользователя", description = "Проверяет логин и пароль, возвращает JWT токен")
     @ApiResponse(responseCode = "200", description = "Пользователь успешно авторизован", content = @Content)
     @PostMapping("/login")
-    public ResponseEntity<LoginDto> login(@RequestBody @Valid LoginDto authLoginDto) {
+    public ResponseEntity<String> login(@RequestBody @Valid LoginDto authLoginDto) {
         return ResponseEntity.ok(authService.login(authLoginDto));
     }
 

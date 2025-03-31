@@ -30,14 +30,13 @@ public class AuthService {
     private final UserRoleService userRoleService;
     private final MailSender mailSender;
 
-    public LoginDto login(LoginDto authLoginDto) {
+    public String login(LoginDto authLoginDto) {
         var userDetails = personDetailsService.loadUserByUsername(authLoginDto.getEmail());
         if (!passwordEncoder.matches(authLoginDto.getPassword(), userDetails.getPassword())) {
             throw new IllegalArgumentException("Password was incorrect");
         }
 
-        authLoginDto.setToken(jwtUtil.generateToken(authLoginDto.getEmail()));
-        return authLoginDto;
+        return jwtUtil.generateToken(authLoginDto.getEmail());
     }
 
     @Transactional
