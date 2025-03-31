@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class ReviewService {
      * Создаёт новый отзыв.
      * Поля createdAt, updatedAt, статус, лайки и вложения устанавливаются по умолчанию.
      */
-    public ReviewReturnDto create(ReviewDto dto) {
+    public ReviewReturnDto create(CreateReviewDto dto) {
         Review review = new Review();
         review.setComment(dto.getComment());
         review.setRating(dto.getRating());
@@ -198,6 +199,8 @@ public class ReviewService {
         dto.setStatus(review.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
+        dto.setCreatedAt(LocalDateTime.from(review.getCreatedDate()));
+        dto.setUpdatedAt(LocalDateTime.from(review.getLastModifiedDate()));
         List<ReviewCommentDto> comments = reviewCommentRepository.findByReview(review)
                 .stream()
                 .map(comment -> {
@@ -208,6 +211,7 @@ public class ReviewService {
                     UserDto commentUser = (userResponse != null) ? userResponse.getBody() : null;
                     commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
                     commentDto.setComment(comment.getComment());
+                    commentDto.setCreatedAt(LocalDateTime.from(comment.getCreatedDate()));
                     return commentDto;
                 })
                 .collect(Collectors.toList());

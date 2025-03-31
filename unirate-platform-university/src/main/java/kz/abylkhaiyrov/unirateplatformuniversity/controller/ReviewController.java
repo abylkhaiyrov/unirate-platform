@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.abylkhaiyrov.unirateplatformuniversity.dto.ReviewCommentDto;
-import kz.abylkhaiyrov.unirateplatformuniversity.dto.ReviewDto;
-import kz.abylkhaiyrov.unirateplatformuniversity.dto.ReviewReturnDto;
-import kz.abylkhaiyrov.unirateplatformuniversity.dto.UniversityReviewStats;
+import kz.abylkhaiyrov.unirateplatformuniversity.dto.*;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +30,7 @@ public class ReviewController {
             }
     )
     @PostMapping
-    public ReviewReturnDto createReview(@RequestBody ReviewDto reviewDto) {
+    public ReviewReturnDto createReview(@RequestBody CreateReviewDto reviewDto) {
         return reviewService.create(reviewDto);
     }
 
