@@ -187,6 +187,14 @@ public class UniversityService {
                 !entity.getBaseCost().equals(dto.getBaseCost()))) {
             entity.setBaseCost(dto.getBaseCost());
         }
+        if (Objects.nonNull(dto.getMilitaryDepartmentCost()) && (entity.getMilitaryDepartmentCost() == null ||
+                !entity.getMilitaryDepartmentCost().equals(dto.getMilitaryDepartmentCost()))) {
+            entity.setMilitaryDepartmentCost(dto.getMilitaryDepartmentCost());
+        }
+        if (Objects.nonNull(dto.getDormitoryCost()) && (entity.getDormitoryCost() == null ||
+                !entity.getDormitoryCost().equals(dto.getDormitoryCost()))) {
+            entity.setDormitoryCost(dto.getDormitoryCost());
+        }
         saveUniversity(entity);
         log.info("University updated: {}", entity);
         var universityAddress = universityAddressService.getUniversityAddressByUniversityId(entity.getId())
