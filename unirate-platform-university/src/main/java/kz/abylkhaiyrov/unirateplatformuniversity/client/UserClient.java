@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
-        name = "UNIRATE-PLATFORM-REGISTRY",
+        url = "https://unirate.kz",
         configuration = FeignClientInterceptor.class,
         fallback = UserClientFallback.class  ,
         decode404 = true,
         path = "/registry"
-//        url = "${UNIRATE-PLATFORM-REGISTRY_URL:http://localhost:8087}"
 )
 public interface UserClient {
 
