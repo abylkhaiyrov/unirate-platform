@@ -29,6 +29,10 @@ public class CreateUniversityDto {
 
     private Long ratingCount;
 
+    private Long militaryDepartmentCost;
+
+    private Long dormitoryCost;
+
     private Boolean militaryDepartment;
 
     private Boolean dormitory;

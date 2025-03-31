@@ -35,6 +35,8 @@ public class UniversityAdapter {
         dto.setRatingCount(entity.getRatingCount());
         dto.setDormitory(entity.getDormitory());
         dto.setMilitaryDepartment(entity.getMilitaryDepartment());
+        dto.setMilitaryDepartmentCost(entity.getMilitaryDepartmentCost());
+        dto.setDormitoryCost(entity.getDormitoryCost());
         return dto;
     }
 
@@ -58,6 +60,8 @@ public class UniversityAdapter {
         var universityAddressDto = universityAddressMapper.entity2Dto(universityAddress);
         dto.setFaculty(faculty);
         dto.setUniversityAddress(universityAddressDto);
+        dto.setMilitaryDepartmentCost(entity.getMilitaryDepartmentCost());
+        dto.setDormitoryCost(entity.getDormitoryCost());
         return dto;
     }
 
@@ -83,6 +87,8 @@ public class UniversityAdapter {
         var universityAddressDto = universityAddressMapper.entity2Dto(universityAddress);
         dto.setFaculty(faculty);
         dto.setUniversityAddress(universityAddressDto);
+        dto.setMilitaryDepartmentCost(entity.getMilitaryDepartmentCost());
+        dto.setDormitoryCost(entity.getDormitoryCost());
         return dto;
     }
 

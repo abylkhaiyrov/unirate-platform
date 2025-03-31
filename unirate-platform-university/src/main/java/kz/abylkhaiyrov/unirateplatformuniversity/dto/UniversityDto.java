@@ -36,6 +36,10 @@ public class UniversityDto {
 
     private Boolean dormitory;
 
+    private Long militaryDepartmentCost;
+
+    private Long dormitoryCost;
+
     private UniversityAddressDto universityAddress;
 
     private List<FacultyAndSpecialityDto> faculty;

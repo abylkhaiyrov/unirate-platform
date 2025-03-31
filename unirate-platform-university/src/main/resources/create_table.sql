@@ -167,10 +167,7 @@ ALTER TABLE favorites ALTER COLUMN id SET DEFAULT nextval('favorites_id_seq');
 alter table faculties
     add column common_name varchar(50);
 
-select
-    * from favorites f
-      left join universities u on f.university_id = u.id
-      left join faculties f2 on u.id = f2.university_id
-where user_id = userId
-and u.name in ('','')
-and f2.common_name in ('', '')
+alter table universities
+    add column military_department_cost bigint,
+    add column dormitory_cost bigint
+

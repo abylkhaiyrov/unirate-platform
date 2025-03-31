@@ -52,6 +52,8 @@ public class UniversityService {
         entity.setRatingCount(dto.getRatingCount());
         entity.setMilitaryDepartment(dto.getMilitaryDepartment());
         entity.setDormitory(dto.getDormitory());
+        entity.setDormitoryCost(dto.getDormitoryCost());
+        entity.setMilitaryDepartmentCost(dto.getMilitaryDepartmentCost());
         entity = saveUniversity(entity);
         log.info("University created with ID: {}", entity.getId());
         return adapter.entity2Dto(entity);

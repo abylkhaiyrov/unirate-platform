@@ -56,6 +56,12 @@ public class University extends AbstractAuditEntity {
     @Column(name = "dormitory")
     private Boolean dormitory;
 
+    @Column(name = "military_department_cost")
+    private Long militaryDepartmentCost;
+
+    @Column(name = "dormitory_cost")
+    private Long dormitoryCost;
+
     /**
      * Связь один ко многим (один университет - много курсов).
      * mappedBy="university" говорит, что колонка FK находится в сущности Course.

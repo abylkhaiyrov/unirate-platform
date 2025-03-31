@@ -8,8 +8,6 @@ import java.util.List;
 @Getter
 public class UniversityComparisonRequestDto {
 
-    private List<Long> universityIds;
-
     private Long userId;
 
     private List<String> universityName;

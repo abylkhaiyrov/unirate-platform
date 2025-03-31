@@ -75,40 +75,38 @@ public class FavoriteService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<UniversityComparisonDto> cq = cb.createQuery(UniversityComparisonDto.class);
 
-        Root<Favorite> favoritesRoot = cq.from(Favorite.class);
+        // Корневая сущность – Favorite
+        Root<Favorite> favoriteRoot = cq.from(Favorite.class);
 
-        Join<Favorite, University> universityJoin = favoritesRoot.join("universities", JoinType.LEFT);
+        // LEFT JOIN с университетом
+        Join<Favorite, University> universityJoin = favoriteRoot.join("universities", JoinType.LEFT);
+        // LEFT JOIN с факультетом университета
         Join<University, Faculty> facultyJoin = universityJoin.join("faculties", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
         // Фильтр по userId
-        predicates.add(cb.equal(favoritesRoot.get("user_id"), requestDto.getUserId()));
+        predicates.add(cb.equal(favoriteRoot.get("userId"), requestDto.getUserId()));
 
-        // Фильтр по списку идентификаторов университетов, если переданы
-        if (requestDto.getUniversityIds() != null && !requestDto.getUniversityIds().isEmpty()) {
-            predicates.add(universityJoin.get("id").in(requestDto.getUniversityIds()));
-        }
-
-        // Фильтр по именам университетов
+        // Фильтр по именам университетов (если переданы)
         if (requestDto.getUniversityName() != null && !requestDto.getUniversityName().isEmpty()) {
             predicates.add(universityJoin.get("name").in(requestDto.getUniversityName()));
         }
 
-        // Фильтр по общему названию факультета (CommonName enum)
+        // Фильтр по commonName факультета (если переданы)
         if (requestDto.getCommonName() != null && !requestDto.getCommonName().isEmpty()) {
             predicates.add(facultyJoin.get("commonName").in(requestDto.getCommonName()));
         }
 
-        // Проекция в DTO с нужными полями
+        // Формируем проекцию в DTO с нужными полями
         cq.select(cb.construct(
                         UniversityComparisonDto.class,
-                        universityJoin.get("name"),             // universityName
-                        universityJoin.get("rating"),             // rating
-                        facultyJoin.get("baseCost"),           // baseCost
-                        universityJoin.get("militaryDepartment"), // militaryDepartment
-                        universityJoin.get("dormitory"),          // dormitory
-                        facultyJoin.get("name")                   // facultyName
+                        universityJoin.get("name"),              // universityName
+                        universityJoin.get("rating"),            // rating
+                        facultyJoin.get("baseCost"),             // baseCost
+                        universityJoin.get("militaryDepartment"),// militaryDepartment
+                        universityJoin.get("dormitory"),         // dormitory
+                        facultyJoin.get("name")                  // facultyName
                 ))
                 .where(cb.and(predicates.toArray(new Predicate[0])))
                 .distinct(true);
