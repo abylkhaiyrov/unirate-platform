@@ -112,11 +112,11 @@ public class ReviewController {
                     @ApiResponse(responseCode = "404", description = "Университет не найден", content = @Content)
             }
     )
-    @GetMapping("/university/{universityId}")
+    @GetMapping("/university/{forumId}")
     public Page<ReviewReturnDto> getReviewsByUniversity(
-            @Parameter(description = "ID университета", required = true) @PathVariable Long universityId,
+            @Parameter(description = "ID форума", required = true) @PathVariable Long forumId,
             Pageable pageable) {
-        return reviewService.getByUniversity(universityId, pageable);
+        return reviewService.getByForum(forumId, pageable);
     }
 
     @Operation(

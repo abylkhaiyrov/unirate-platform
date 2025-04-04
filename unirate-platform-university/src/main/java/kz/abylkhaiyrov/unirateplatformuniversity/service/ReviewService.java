@@ -96,9 +96,9 @@ public class ReviewService {
     }
 
     /**
-     * Возвращает отзывы для конкретного университета с возможностью сортировки и фильтрации.
+     * Возвращает отзывы для конкретного форума с возможностью сортировки и фильтрации.
      */
-    public Page<ReviewReturnDto> getByUniversity(Long forumId, Pageable pageable) {
+    public Page<ReviewReturnDto> getByForum(Long forumId, Pageable pageable) {
         var forum = forumRepository.findById(forumId).orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + forumId));
         return reviewRepository.findByForum(forum, pageable)
                 .map(this::mapToReviewReturnDto);
