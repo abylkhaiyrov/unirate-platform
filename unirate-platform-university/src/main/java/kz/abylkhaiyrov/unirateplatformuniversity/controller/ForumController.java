@@ -5,6 +5,7 @@ import kz.abylkhaiyrov.unirateplatformuniversity.dto.ForumDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.ForumService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,16 @@ public class ForumController {
     @GetMapping("/{id}")
     public ForumDto getForumById(@PathVariable Long id) {
         return forumService.getForumById(id);
+    }
+
+    /**
+     * Получение списка всех форумов по университету.
+     *
+     * @return список DTO форумов
+     */
+    @GetMapping("/university/{universityId}")
+    public ResponseEntity<List<ForumDto>> getForumsWithUniversity(@PathVariable Long universityId) {
+        return ResponseEntity.ok(forumService.getForumsWithUniversity(universityId));
     }
 
     /**

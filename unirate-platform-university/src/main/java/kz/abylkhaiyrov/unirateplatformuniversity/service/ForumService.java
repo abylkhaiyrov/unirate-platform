@@ -64,6 +64,21 @@ public class ForumService {
     }
 
     /**
+     * Получает список всех форумов по университету.
+     *
+     * @return список ForumDto
+     */
+    @Transactional(readOnly = true)
+    public List<ForumDto> getForumsWithUniversity(Long universityId) {
+        log.info("Fetching Forums with university id: {}", universityId);
+        var university = universityRepository.findById(universityId).orElseThrow(() -> new NotFoundException("University not found with id: " + universityId));
+        return forumRepository.findAllByUniversity(university)
+                .stream()
+                .map(forumAdapter::entity2Dto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Получает список всех форумов.
      *
      * @return список ForumDto
