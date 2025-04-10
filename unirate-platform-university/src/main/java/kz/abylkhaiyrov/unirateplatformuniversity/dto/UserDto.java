@@ -20,5 +20,5 @@ public class UserDto {
     @Pattern(regexp = "^(?:\\+7|8)7\\d{9}$", message = "Telephone number should in format: +77764268111 or " +
             "87764268111")
     private String telephone;
-
+    private String userProfileImageUrl;
 }

@@ -120,4 +120,20 @@ public class SpecialtyService {
         log.info("Deleted Specialty with id: {}", id);
     }
 
+
+    public String updateSpecialtyProfile(Long specialtyId, String url) {
+        var user = specialtyRepository.findById(specialtyId)
+                .orElseThrow(() -> new IllegalArgumentException("Specialty doesn't exist with id: " + specialtyId));
+        try {
+            if (url != null && (user.getSpecialtyImageUrl() == null || !user.getSpecialtyImageUrl().equals(url))) {
+                user.setSpecialtyImageUrl(url);
+            }
+            specialtyRepository.save(user);
+            return "Specialty updated successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Specialty update failed";
+        }
+    }
+
 }

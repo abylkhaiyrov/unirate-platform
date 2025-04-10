@@ -57,6 +57,21 @@ public class UserService {
         return userDto;
     }
 
+    public String updateUserProfile(Long userId, String url) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User doesn't exist with id: " + userId));
+        try {
+            if (url != null && (user.getProfileImageUrl() == null || !user.getProfileImageUrl().equals(url))) {
+                user.setProfileImageUrl(url);
+            }
+            userRepository.save(user);
+            return "Profile updated successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Profile update failed";
+        }
+    }
+
     @Transactional
     public UserDto updateById(Long id, UserDto userDto) {
         Optional<User> byId = userRepository.findById(id);

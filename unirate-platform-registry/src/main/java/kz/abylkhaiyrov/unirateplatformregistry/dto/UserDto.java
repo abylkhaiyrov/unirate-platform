@@ -29,5 +29,5 @@ public class UserDto {
             "87764268111")
     private String telephone;
     private UserStatus status;
-
+    private String userProfileImageUrl;
 }

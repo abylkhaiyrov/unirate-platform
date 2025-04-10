@@ -48,4 +48,12 @@ public class SpecialtyController {
         specialtyService.deleteSpecialty(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{specialtyId}/update")
+    public ResponseEntity<String> updateProfileUrl(
+            @PathVariable("specialtyId") Long specialtyId,
+            @RequestParam("url") String url) {
+        return ResponseEntity.ok(specialtyService.updateSpecialtyProfile(specialtyId, url));
+    }
+
 }

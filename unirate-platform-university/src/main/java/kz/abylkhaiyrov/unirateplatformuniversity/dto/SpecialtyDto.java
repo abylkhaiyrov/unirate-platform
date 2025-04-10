@@ -19,4 +19,6 @@ public class SpecialtyDto {
 
     private List<CourseDto> courses;
 
+    private String specialtyImageUrl;
+
 }

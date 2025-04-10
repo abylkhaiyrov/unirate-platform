@@ -56,4 +56,7 @@ public class User extends AbstractAuditingEntity {
     @Column(name = "deleted")
     private boolean isDeleted = false;
 
+    @Column(name = "user_profile_image_url", length = 500)
+    private String profileImageUrl;
+
 }

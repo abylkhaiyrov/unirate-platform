@@ -70,5 +70,16 @@ public class UserController {
         return ResponseEntity.ok(userService.updateById(id, userDto));
     }
 
+    @Operation(
+            summary = "Обновить фотографию пользователя",
+            description = "Обновляет фотографию пользователя по заданному идентификатору"
+    )
+    @ApiResponse(responseCode = "200", description = "Пользователь успешно обновлен", content = @Content)
+    @PutMapping("/{userId}/update")
+    public ResponseEntity<String> updateProfileUrl(
+            @PathVariable("userId") Long userId,
+            @RequestParam("url") String url) {
+        return ResponseEntity.ok(userService.updateUserProfile(userId, url));
+    }
 
 }
