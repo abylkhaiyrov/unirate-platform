@@ -105,14 +105,14 @@ public class ReviewController {
     }
 
     @Operation(
-            summary = "Получение отзывов для конкретного университета",
-            description = "Возвращает постраничный список отзывов для указанного университета",
+            summary = "Получение отзывов для конкретного форума",
+            description = "Возвращает постраничный список отзывов для указанного форума",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список отзывов успешно получен", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "404", description = "Университет не найден", content = @Content)
             }
     )
-    @GetMapping("/university/{forumId}")
+    @GetMapping("/forum/{forumId}")
     public Page<ReviewReturnDto> getReviewsByUniversity(
             @Parameter(description = "ID форума", required = true) @PathVariable Long forumId,
             Pageable pageable) {

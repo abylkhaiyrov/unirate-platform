@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -199,8 +200,8 @@ public class ReviewService {
         dto.setStatus(review.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
-        dto.setCreatedAt(LocalDateTime.from(review.getCreatedDate()));
-        dto.setUpdatedAt(LocalDateTime.from(review.getLastModifiedDate()));
+        dto.setCreatedAt(LocalDateTime.ofInstant(review.getCreatedDate(), ZoneId.systemDefault()));
+        dto.setUpdatedAt(LocalDateTime.ofInstant(review.getLastModifiedDate(), ZoneId.systemDefault()));
         List<ReviewCommentDto> comments = reviewCommentRepository.findByReview(review)
                 .stream()
                 .map(comment -> {
@@ -211,7 +212,7 @@ public class ReviewService {
                     UserDto commentUser = (userResponse != null) ? userResponse.getBody() : null;
                     commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
                     commentDto.setComment(comment.getComment());
-                    commentDto.setCreatedAt(LocalDateTime.from(comment.getCreatedDate()));
+                    commentDto.setCreatedAt(LocalDateTime.ofInstant(comment.getCreatedDate(), ZoneId.systemDefault()));
                     return commentDto;
                 })
                 .collect(Collectors.toList());
