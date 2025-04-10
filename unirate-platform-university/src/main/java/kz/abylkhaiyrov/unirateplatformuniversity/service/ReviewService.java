@@ -1,6 +1,7 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
 import kz.abylkhaiyrov.unirateplatformuniversity.client.UserClient;
+import kz.abylkhaiyrov.unirateplatformuniversity.configuration.UserCache;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.*;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Review;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.ReviewComment;
@@ -30,6 +31,7 @@ public class ReviewService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserClient userClient;
     private final ForumRepository forumRepository;
+    private final UserCache userCache;
 
     /**
      * Создаёт новый отзыв.
@@ -182,13 +184,7 @@ public class ReviewService {
      * Преобразует сущность отзыва в ReviewReturnDto, добавляя данные о пользователе, университете и комментариях.
      */
     private ReviewReturnDto mapToReviewReturnDto(Review review) {
-        ResponseEntity<UserDto> response = userClient.findUserById(review.getUserId());
-        UserDto user = (response != null) ? response.getBody() : null;
-        if (user == null) {
-            log.warn("User not found for review id {} with userId {}", review.getId(), review.getUserId());
-            user = new UserDto();
-        }
-
+        UserDto user = userCache.getUserById(review.getUserId());
         ReviewReturnDto dto = new ReviewReturnDto();
         dto.setId(review.getId());
         dto.setComment(review.getComment());
@@ -208,8 +204,7 @@ public class ReviewService {
                     ReviewCommentDto commentDto = new ReviewCommentDto();
                     commentDto.setId(comment.getId());
                     commentDto.setUserId(comment.getUserId());
-                    ResponseEntity<UserDto> userResponse = userClient.findUserById(comment.getUserId());
-                    UserDto commentUser = (userResponse != null) ? userResponse.getBody() : null;
+                    UserDto commentUser = userCache.getUserById(review.getUserId());
                     commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
                     commentDto.setComment(comment.getComment());
                     commentDto.setCreatedAt(LocalDateTime.ofInstant(comment.getCreatedDate(), ZoneId.systemDefault()));
