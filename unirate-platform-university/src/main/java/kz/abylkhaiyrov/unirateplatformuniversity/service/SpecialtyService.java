@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +43,11 @@ public class SpecialtyService {
         var faculty = facultyRepository.findById(specialtyDto.getFacultyId())
                 .orElseThrow(() -> new NotFoundException("Faculty not found with id: " + specialtyDto.getFacultyId()));
         entity.setFaculty(faculty);
-
+        entity.setFacultyName(faculty.getName());
+        entity.setGopCode(specialtyDto.getGopCode());
+        entity.setMinScores(specialtyDto.getMinScores());
+        entity.setGrants(specialtyDto.getGrants());
+        entity.setUniversityName(faculty.getUniversity().getName());
         entity = specialtyRepository.save(entity);
 
         if (specialtyDto.getCourseIds() != null && !specialtyDto.getCourseIds().isEmpty()) {
@@ -99,12 +106,16 @@ public class SpecialtyService {
     public SpecialtyDto updateSpecialty(Long id, SpecialtyDto specialtyDto) {
         Specialty specialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Specialty not found with id: " + id));
-        specialty.setName(specialtyDto.getName());
-        specialty.setDescription(specialtyDto.getDescription());
-        // Note: if you need to update courses or other relationships, add that logic here.
+
+        updateIfChanged(specialty::getName, specialty::setName, specialtyDto.getName());
+        updateIfChanged(specialty::getDescription, specialty::setDescription, specialtyDto.getDescription());
+        updateIfChanged(specialty::getGopCode, specialty::setGopCode, specialtyDto.getGopCode());
+        updateIfChanged(specialty::getMinScores, specialty::setMinScores, specialtyDto.getMinScores());
+        updateIfChanged(specialty::getGrants, specialty::setGrants, specialtyDto.getGrants());
         specialty = specialtyRepository.save(specialty);
         return specialtyMapper.entityToDto(specialty);
     }
+
 
     /**
      * Deletes a Specialty by its id.
@@ -133,6 +144,21 @@ public class SpecialtyService {
         } catch (Exception e) {
             e.printStackTrace();
             return "Specialty update failed";
+        }
+    }
+
+    /**
+     * Вспомогательный метод для обновления поля объекта, если новое значение не null и отличается от текущего.
+     *
+     * @param currentValueSupplier поставщик текущего значения.
+     * @param setter функция для установки нового значения.
+     * @param newValue новое значение для поля.
+     * @param <T> тип поля.
+     */
+    private <T> void updateIfChanged(Supplier<T> currentValueSupplier, Consumer<T> setter, T newValue) {
+        T currentValue = currentValueSupplier.get();
+        if (newValue != null && (currentValue == null || !Objects.equals(currentValue, newValue))) {
+            setter.accept(newValue);
         }
     }
 

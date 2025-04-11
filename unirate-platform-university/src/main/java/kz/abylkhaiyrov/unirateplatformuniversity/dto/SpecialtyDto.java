@@ -21,4 +21,14 @@ public class SpecialtyDto {
 
     private String specialtyImageUrl;
 
+    private String facultyName;
+
+    private String universityName;
+
+    private String gopCode;
+
+    private String grants;
+
+    private String minScores;
+
 }
