@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -57,14 +58,60 @@ public class AuthService {
     }
 
     @Transactional
-    public void resetPassword(ResetPasswordDto dto) {
-        var activeByLogin = userService.findActiveByEmail(dto.getEmail());
-        if (activeByLogin.isEmpty()) {
-            throw new IllegalArgumentException("User is not present");
+    public String sendResetPasswordCode(String email) {
+        var userOptional = userService.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return "Пользователь с таким email не найден";
         }
-        var user = activeByLogin.get();
-        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        var user = userOptional.get();
+
+        var resetCode = generateResetCode();
+        user.setActivationCode(resetCode);
+        user.setActivationCodeSentAt(LocalDateTime.now());
         userService.save(user);
+
+        sendResetPasswordEmail(user.getEmail(), resetCode);
+        return "Код для сброса пароля отправлен на email";
+    }
+
+    @Transactional
+    public String resetPassword(ResetPasswordDto dto) {
+        var userOptional = userService.findByEmail(dto.getEmail());
+        if (userOptional.isEmpty()) {
+            return "Пользователь с таким email не найден";
+        }
+        var user = userOptional.get();
+
+        if (!Objects.equals(user.getActivationCode(), dto.getResetCode())) {
+            return "Неверный код сброса пароля";
+        }
+
+        if (user.getActivationCodeSentAt() == null ||
+                user.getActivationCodeSentAt().plusHours(24).isBefore(LocalDateTime.now())) {
+            return "Код сброса пароля устарел. Пожалуйста, запросите повторную отправку кода.";
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setActivationCode(null);
+        user.setActivationCodeSentAt(null);
+        userService.save(user);
+        return "Пароль успешно изменен";
+    }
+
+    public void sendResetPasswordEmail(String email, Integer resetCode) {
+        log.info("Отправка email для сброса пароля на адрес {}", email);
+        var subject = "Ваш код для сброса пароля";
+        var body = "Здравствуйте!\n\n" +
+                "Вы запросили сброс пароля. Для подтверждения операции используйте следующий код:\n\n" +
+                resetCode +
+                "\n\n" +
+                "Код действителен в течение 24 часов. Если вы не запрашивали сброс пароля, проигнорируйте это сообщение.\n\n" +
+                "С уважением,\nКоманда поддержки";
+        mailSender.sendMail(email, subject, body);
+    }
+
+    private Integer generateResetCode() {
+        return (int)(Math.random() * 900000) + 100000;
     }
 
     public String activationCode(Integer code) {

@@ -38,12 +38,34 @@ public class AuthController {
         return ResponseEntity.accepted().build();
     }
 
-    @Operation(summary = "Сброс пароля", description = "Обновляет пароль пользователя")
-    @ApiResponse(responseCode = "200", description = "Пароль успешно сброшен", content = @Content)
+    @Operation(
+            summary = "Запрос кода для сброса пароля",
+            description = "Отправляет на указанный email код для подтверждения операции сброса пароля"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Код для сброса пароля успешно отправлен",
+            content = @Content
+    )
+    @PostMapping("/send-reset-password-code")
+    public ResponseEntity<String> sendResetPasswordCode(@RequestParam String email) {
+        String result = authService.sendResetPasswordCode(email);
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(
+            summary = "Сброс пароля",
+            description = "Обновляет пароль пользователя, если введённый код действителен"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Пароль успешно изменён",
+            content = @Content
+    )
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto) {
-        authService.resetPassword(resetPasswordDto);
-        return ResponseEntity.ok("Successfully reset password: " + resetPasswordDto.getNewPassword());
+        String result = authService.resetPassword(resetPasswordDto);
+        return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "Активация аккаунта", description = "Активирует аккаунт пользователя по переданному активационному коду")
