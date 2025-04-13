@@ -65,7 +65,7 @@ public class AuthService {
         }
         var user = userOptional.get();
 
-        var resetCode = generateResetCode();
+        var resetCode = generateActivationCode();
         user.setActivationCode(resetCode);
         user.setActivationCodeSentAt(LocalDateTime.now());
         userService.save(user);
@@ -108,10 +108,6 @@ public class AuthService {
                 "Код действителен в течение 24 часов. Если вы не запрашивали сброс пароля, проигнорируйте это сообщение.\n\n" +
                 "С уважением,\nКоманда поддержки";
         mailSender.sendMail(email, subject, body);
-    }
-
-    private Integer generateResetCode() {
-        return (int)(Math.random() * 900000) + 100000;
     }
 
     public String activationCode(Integer code) {
