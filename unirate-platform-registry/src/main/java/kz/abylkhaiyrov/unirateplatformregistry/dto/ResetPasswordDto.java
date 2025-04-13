@@ -14,6 +14,6 @@ public class ResetPasswordDto {
     @NotNull
     private String email;
 
-    private String resetCode;
+    private Integer resetCode;
 
 }
