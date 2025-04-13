@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -29,7 +29,6 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewCommentRepository reviewCommentRepository;
-    private final UserClient userClient;
     private final ForumRepository forumRepository;
     private final UserCache userCache;
 
@@ -102,7 +101,8 @@ public class ReviewService {
      * Возвращает отзывы для конкретного форума с возможностью сортировки и фильтрации.
      */
     public Page<ReviewReturnDto> getByForum(Long forumId, Pageable pageable) {
-        var forum = forumRepository.findById(forumId).orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + forumId));
+        var forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new NotFoundException("Forum not found with forumId: " + forumId));
         return reviewRepository.findByForum(forum, pageable)
                 .map(this::mapToReviewReturnDto);
     }
@@ -170,10 +170,8 @@ public class ReviewService {
                     ReviewCommentDto dto = new ReviewCommentDto();
                     dto.setId(comment.getId());
                     dto.setUserId(comment.getUserId());
-                    // Получаем имя пользователя через userClient (при наличии)
-                    ResponseEntity<UserDto> response = userClient.findUserById(comment.getUserId());
-                    UserDto user = (response != null) ? response.getBody() : null;
-                    dto.setUserName(user != null ? user.getUsername() : "Unknown");
+                    UserDto commentUser = userCache.getUserById(comment.getUserId());
+                    dto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
                     dto.setComment(comment.getComment());
                     return dto;
                 })
@@ -196,23 +194,35 @@ public class ReviewService {
         dto.setStatus(review.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
-        dto.setCreatedAt(LocalDateTime.ofInstant(review.getCreatedDate(), ZoneId.systemDefault()));
-        dto.setUpdatedAt(LocalDateTime.ofInstant(review.getLastModifiedDate(), ZoneId.systemDefault()));
+        dto.setCreatedAt(convertInstant(review.getCreatedDate()));
+        dto.setUpdatedAt(convertInstant(review.getLastModifiedDate()));
         List<ReviewCommentDto> comments = reviewCommentRepository.findByReview(review)
                 .stream()
-                .map(comment -> {
-                    ReviewCommentDto commentDto = new ReviewCommentDto();
-                    commentDto.setId(comment.getId());
-                    commentDto.setUserId(comment.getUserId());
-                    UserDto commentUser = userCache.getUserById(review.getUserId());
-                    commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
-                    commentDto.setComment(comment.getComment());
-                    commentDto.setCreatedAt(LocalDateTime.ofInstant(comment.getCreatedDate(), ZoneId.systemDefault()));
-                    return commentDto;
-                })
+                .map(this::mapReviewCommentToDto)
                 .collect(Collectors.toList());
         dto.setComments(comments);
         return dto;
+    }
+
+    /**
+     * Преобразует дату (Instant) в LocalDateTime с учетом системной временной зоны.
+     */
+    private LocalDateTime convertInstant(Instant instant) {
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    /**
+     * Преобразует сущность комментария отзыва в DTO.
+     */
+    private ReviewCommentDto mapReviewCommentToDto(ReviewComment comment) {
+        ReviewCommentDto commentDto = new ReviewCommentDto();
+        commentDto.setId(comment.getId());
+        commentDto.setUserId(comment.getUserId());
+        UserDto commentUser = userCache.getUserById(comment.getUserId());
+        commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
+        commentDto.setComment(comment.getComment());
+        commentDto.setCreatedAt(convertInstant(comment.getCreatedDate()));
+        return commentDto;
     }
 
     private Review saveReview(Review review) {
