@@ -1,6 +1,5 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.service;
 
-import kz.abylkhaiyrov.unirateplatformuniversity.client.UserClient;
 import kz.abylkhaiyrov.unirateplatformuniversity.configuration.UserCache;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.*;
 import kz.abylkhaiyrov.unirateplatformuniversity.entity.Review;
@@ -192,6 +191,7 @@ public class ReviewService {
         dto.setForumId(review.getForum().getId());
         dto.setForumName(review.getForum().getName());
         dto.setStatus(user.getStatus().name());
+        dto.setProfileImgUrl(user.getUserProfileImageUrl());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
         dto.setCreatedAt(convertInstant(review.getCreatedDate()));
@@ -222,6 +222,8 @@ public class ReviewService {
         commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
         commentDto.setComment(comment.getComment());
         commentDto.setCreatedAt(convertInstant(comment.getCreatedDate()));
+        commentDto.setStatus(commentUser.getStatus().name());
+        commentDto.setProfileImgUrl(commentUser.getUserProfileImageUrl());
         return commentDto;
     }
 

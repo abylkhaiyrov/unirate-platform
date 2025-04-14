@@ -24,4 +24,5 @@ public class ReviewReturnDto {
     private List<String> attachments;
     // Список комментариев к отзыву
     private List<ReviewCommentDto> comments;
+    private String profileImgUrl;
 }
