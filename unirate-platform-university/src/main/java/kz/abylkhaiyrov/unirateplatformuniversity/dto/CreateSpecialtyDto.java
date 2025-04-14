@@ -15,10 +15,6 @@ public class CreateSpecialtyDto {
 
     private Long facultyId;
 
-    private String facultyName;
-
-    private String universityName;
-
     private String gopCode;
 
     private String grants;
