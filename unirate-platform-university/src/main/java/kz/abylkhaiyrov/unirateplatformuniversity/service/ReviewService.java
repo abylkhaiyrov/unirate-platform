@@ -191,7 +191,7 @@ public class ReviewService {
         dto.setUserName(user.getUsername());
         dto.setForumId(review.getForum().getId());
         dto.setForumName(review.getForum().getName());
-        dto.setStatus(review.getStatus().name());
+        dto.setStatus(user.getStatus().name());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
         dto.setCreatedAt(convertInstant(review.getCreatedDate()));
