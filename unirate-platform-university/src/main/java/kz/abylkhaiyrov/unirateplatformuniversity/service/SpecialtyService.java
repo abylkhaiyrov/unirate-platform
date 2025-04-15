@@ -48,24 +48,25 @@ public class SpecialtyService {
         entity.setMinScores(specialtyDto.getMinScores());
         entity.setGrants(specialtyDto.getGrants());
         entity.setUniversityName(faculty.getUniversity().getName());
+        entity.setSpecialtyImageUrl(specialtyDto.getSpecialtyImageUrl());
         entity = specialtyRepository.save(entity);
 
-        if (specialtyDto.getCourseIds() != null && !specialtyDto.getCourseIds().isEmpty()) {
-            var courses = courseRepository.findAllById(specialtyDto.getCourseIds());
-
-            if (courses.size() != specialtyDto.getCourseIds().size()) {
-                throw new NotFoundException("One or more courses not found for ids: " + specialtyDto.getCourseIds());
-            }
-
-            final var savedEntity = entity;
-            courses.forEach(course -> {
-                course.getSpecialties().add(savedEntity);
-                courseRepository.save(course);
-            });
-
-            entity.setCourses(courses);
-            entity = specialtyRepository.save(entity);
-        }
+//        if (specialtyDto.getCourseIds() != null && !specialtyDto.getCourseIds().isEmpty()) {
+//            var courses = courseRepository.findAllById(specialtyDto.getCourseIds());
+//
+//            if (courses.size() != specialtyDto.getCourseIds().size()) {
+//                throw new NotFoundException("One or more courses not found for ids: " + specialtyDto.getCourseIds());
+//            }
+//
+//            final var savedEntity = entity;
+//            courses.forEach(course -> {
+//                course.getSpecialties().add(savedEntity);
+//                courseRepository.save(course);
+//            });
+//
+//            entity.setCourses(courses);
+//            entity = specialtyRepository.save(entity);
+//        }
 
         return specialtyMapper.entityToDto(entity);
     }

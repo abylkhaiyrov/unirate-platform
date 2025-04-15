@@ -15,12 +15,14 @@ public class CreateSpecialtyDto {
 
     private Long facultyId;
 
+    private String specialtyImageUrl;
+
     private String gopCode;
 
     private String grants;
 
     private String minScores;
 
-    private List<Long> courseIds;
+//    private List<Long> courseIds;
 
 }

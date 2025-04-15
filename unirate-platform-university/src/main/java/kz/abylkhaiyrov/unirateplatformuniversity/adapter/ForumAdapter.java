@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public interface ForumAdapter {
 
     @Mapping(target = "universityId", source = "university.id")
+    @Mapping(target = "universityImgUrl", source = "university.logoUrl")
     @Mapping(target = "topReviews", expression = "java(getTopReviews(forum.getReviews()))")
     ForumDto entity2Dto(Forum forum);
 

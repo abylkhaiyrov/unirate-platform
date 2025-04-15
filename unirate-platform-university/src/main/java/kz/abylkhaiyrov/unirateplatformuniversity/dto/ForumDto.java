@@ -17,5 +17,7 @@ public class ForumDto {
 
     private Long universityId;
 
+    private String universityImgUrl;
+
     private List<ReviewReturnDto> topReviews;
 }

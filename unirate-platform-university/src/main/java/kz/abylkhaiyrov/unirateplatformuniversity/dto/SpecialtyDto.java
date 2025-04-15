@@ -17,7 +17,7 @@ public class SpecialtyDto {
 
     private Long facultyId;
 
-    private List<CourseDto> courses;
+//    private List<CourseDto> courses;
 
     private String specialtyImageUrl;
 
