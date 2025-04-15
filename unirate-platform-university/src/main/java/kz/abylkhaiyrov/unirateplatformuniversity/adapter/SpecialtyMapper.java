@@ -11,6 +11,6 @@ public interface SpecialtyMapper {
     Specialty dtoToEntity(SpecialtyDto specialtyDto);
 
     @Mapping(target = "facultyId", source = "faculty.id")
-    @Mapping(target = "courses", source = "courses")
+//    @Mapping(target = "courses", source = "courses")
     SpecialtyDto entityToDto(Specialty specialty);
 }
