@@ -190,7 +190,7 @@ public class ReviewService {
         dto.setUserName(user.getUsername());
         dto.setForumId(review.getForum().getId());
         dto.setForumName(review.getForum().getName());
-        dto.setStatus(user.getStatus().name());
+        dto.setStatus(user.getStatus() != null ? user.getStatus().name() : "Unknown");
         dto.setProfileImgUrl(user.getUserProfileImageUrl());
         dto.setLikes(review.getLikes());
         dto.setDislikes(review.getDislikes());
@@ -222,7 +222,7 @@ public class ReviewService {
         commentDto.setUserName(commentUser != null ? commentUser.getUsername() : "Unknown");
         commentDto.setComment(comment.getComment());
         commentDto.setCreatedAt(convertInstant(comment.getCreatedDate()));
-        commentDto.setStatus(commentUser.getStatus().name());
+        commentDto.setStatus(commentUser.getStatus() != null ? commentUser.getStatus().name() : "Unknown");
         commentDto.setProfileImgUrl(commentUser.getUserProfileImageUrl());
         return commentDto;
     }
