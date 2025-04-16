@@ -29,4 +29,15 @@ public class MailSender {
         javaMailSender.send(mailMessage);
     }
 
+    public void sendSubscriptionConfirmationEmail(String email) {
+        log.info("Sending subscription confirmation email to {}", email);
+        String subject = "Спасибо за подписку на UniRate";
+        String body = "Здравствуйте!\n\n" +
+                "Вы успешно подписались на уведомления о новых постах с сайта UniRate.\n\n" +
+                "Спасибо, что остаетесь с нами!\n\n" +
+                "С уважением,\n" +
+                "Команда UniRate";
+        sendMail(email, subject, body);
+    }
+
 }

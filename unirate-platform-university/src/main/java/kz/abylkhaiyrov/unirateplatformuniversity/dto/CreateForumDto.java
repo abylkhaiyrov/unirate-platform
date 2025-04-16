@@ -10,4 +10,6 @@ public class CreateForumDto {
     private String description;
 
     private Long universityId;
+
+    private String forumPicture;
 }

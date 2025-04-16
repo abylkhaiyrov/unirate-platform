@@ -83,4 +83,11 @@ public class ForumController {
     public Page<ForumDto> getForumsPage(Pageable pageable) {
         return forumService.getForumsPage(pageable);
     }
+
+    @PutMapping("/{forumId}/update")
+    public ResponseEntity<String> updateProfileUrl(
+            @PathVariable("forumId") Long forumId,
+            @RequestParam("url") String url) {
+        return ResponseEntity.ok(forumService.updateForumPicture(forumId, url));
+    }
 }

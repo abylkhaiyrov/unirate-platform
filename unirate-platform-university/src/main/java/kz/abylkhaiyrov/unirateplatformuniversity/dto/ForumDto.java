@@ -19,5 +19,7 @@ public class ForumDto {
 
     private String universityImgUrl;
 
+    private String forumPicture;
+
     private List<ReviewReturnDto> topReviews;
 }

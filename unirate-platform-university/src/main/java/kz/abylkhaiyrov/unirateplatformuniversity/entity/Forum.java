@@ -31,6 +31,9 @@ public class Forum extends AbstractAuditEntity {
     @JoinColumn(name = "university_id")
     private University university;
 
+    @Column(name = "forum_picture", length = 500)
+    private String forumPicture;
+
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 

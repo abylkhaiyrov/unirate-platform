@@ -128,4 +128,18 @@ public class ForumService {
         return dtoPage;
     }
 
+    public String updateForumPicture(Long forumId, String url) {
+        var user = forumRepository.findById(forumId)
+                .orElseThrow(() -> new IllegalArgumentException("Forum doesn't exist with id: " + forumId));
+        try {
+            if (url != null && (user.getForumPicture() == null || !user.getForumPicture().equals(url))) {
+                user.setForumPicture(url);
+            }
+            forumRepository.save(user);
+            return "Forum updated successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Forum update failed";
+        }
+    }
 }
