@@ -31,12 +31,12 @@ public class MailSender {
 
     public void sendSubscriptionConfirmationEmail(String email) {
         log.info("Sending subscription confirmation email to {}", email);
-        String subject = "Спасибо за подписку на UniRate";
-        String body = "Здравствуйте!\n\n" +
-                "Вы успешно подписались на уведомления о новых постах с сайта UniRate.\n\n" +
-                "Спасибо, что остаетесь с нами!\n\n" +
-                "С уважением,\n" +
-                "Команда UniRate";
+        String subject = "Thank you for subscribing to UniRate";
+        String body = "Hello,\n\n" +
+                "You have successfully subscribed to notifications about new posts on the UniRate site.\n\n" +
+                "Thank you for staying with us!\n\n" +
+                "Best regards,\n" +
+                "The UniRate Team";
         sendMail(email, subject, body);
     }
 

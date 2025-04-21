@@ -61,7 +61,7 @@ public class AuthService {
     public String sendResetPasswordCode(String email) {
         var userOptional = userService.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return "Пользователь с таким email не найден";
+            return "User with this email not found";
         }
         var user = userOptional.get();
 
@@ -71,42 +71,43 @@ public class AuthService {
         userService.save(user);
 
         sendResetPasswordEmail(user.getEmail(), resetCode);
-        return "Код для сброса пароля отправлен на email";
+        return "Password reset code has been sent to your email";
     }
 
     @Transactional
     public String resetPassword(ResetPasswordDto dto) {
         var userOptional = userService.findByEmail(dto.getEmail());
         if (userOptional.isEmpty()) {
-            return "Пользователь с таким email не найден";
+            return "User with this email not found";
         }
         var user = userOptional.get();
 
         if (!Objects.equals(user.getActivationCode(), dto.getResetCode())) {
-            return "Неверный код сброса пароля";
+            return "Invalid password reset code";
         }
 
         if (user.getActivationCodeSentAt() == null ||
                 user.getActivationCodeSentAt().plusHours(24).isBefore(LocalDateTime.now())) {
-            return "Код сброса пароля устарел. Пожалуйста, запросите повторную отправку кода.";
+            return "Password reset code has expired. Please request a new code.";
         }
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         user.setActivationCode(null);
         user.setActivationCodeSentAt(null);
         userService.save(user);
-        return "Пароль успешно изменен";
+        return "Password successfully changed";
     }
 
     public void sendResetPasswordEmail(String email, Integer resetCode) {
-        log.info("Отправка email для сброса пароля на адрес {}", email);
-        var subject = "Ваш код для сброса пароля";
-        var body = "Здравствуйте!\n\n" +
-                "Вы запросили сброс пароля. Для подтверждения операции используйте следующий код:\n\n" +
+        log.info("Sending password reset email to {}", email);
+        var subject = "Your Password Reset Code";
+        var body = "Hello,\n\n" +
+                "You requested a password reset. Please use the following code to confirm this operation:\n\n" +
                 resetCode +
                 "\n\n" +
-                "Код действителен в течение 24 часов. Если вы не запрашивали сброс пароля, проигнорируйте это сообщение.\n\n" +
-                "С уважением,\nКоманда поддержки";
+                "This code is valid for 24 hours. If you did not request a password reset, please ignore this email.\n\n" +
+                "Best regards,\n" +
+                "Support Team";
         mailSender.sendMail(email, subject, body);
     }
 
@@ -115,52 +116,50 @@ public class AuthService {
         if (userOptional.isPresent()) {
             var user = userOptional.get();
             if (user.isActive()) {
-                return "Пользователь уже активирован";
+                return "User is already activated";
             }
             var sentAt = user.getActivationCodeSentAt();
             if (sentAt != null && sentAt.plusHours(24).isBefore(LocalDateTime.now())) {
-                return "Активационный код устарел. Пожалуйста, запросите повторную отправку кода.";
+                return "Activation code has expired. Please request a new code.";
             }
             user.setActive(true);
             user.setActivationCode(null);
             user.setActivationCodeSentAt(null);
             userService.save(user);
-            return "Пользователь успешно активирован";
+            return "User successfully activated";
         }
-        return "Неверный или устаревший активационный код";
+        return "Invalid or expired activation code";
     }
 
+    @Transactional
     public String resendActivation(String email) {
         var userOptional = userService.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return "Пользователь с таким email не найден";
+            return "User with this email not found";
         }
         var user = userOptional.get();
         if (user.isActive()) {
-            return "Пользователь уже активирован";
+            return "User is already activated";
         }
         var activationCode = generateActivationCode();
         user.setActivationCode(activationCode);
         user.setActivationCodeSentAt(LocalDateTime.now());
         userService.save(user);
-        sendActivationEmail(user.getEmail(), activationCode);
 
-        return "Новый код отправлен на email";
+        sendActivationEmail(user.getEmail(), activationCode);
+        return "A new activation code has been sent to your email";
     }
 
     public void sendActivationEmail(String email, Integer activationCode) {
         log.info("Sending activation email to {}", email);
-        var subject = "Ваш код подтверждения для регистрации в UniRate";
-        var body = "Приветствуем вас!\n" +
-                "\n" +
-                "Вы зарегистрировались на платформе UniRate. Для подтверждения вашего email используйте следующий код:\n" +
-                "\n"
-                + activationCode +
-                "\n" +
-                "Код действует в течение 24 часов с момента получения письма. Если вы не запрашивали этот код, просто проигнорируйте это письмо.add\n" +
-                "\n" +
-                "С уважением,\n" +
-                "Команда UniRate ";
+        var subject = "Your UniRate Registration Confirmation Code";
+        var body = "Welcome!\n\n" +
+                "You have registered on the UniRate platform. Please use the following code to confirm your email address:\n\n" +
+                activationCode +
+                "\n\n" +
+                "This code is valid for 24 hours from receipt. If you did not request this code, please ignore this email.\n\n" +
+                "Best regards,\n" +
+                "The UniRate Team";
         mailSender.sendMail(email, subject, body);
     }
 

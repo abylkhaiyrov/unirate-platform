@@ -1,6 +1,7 @@
 package kz.abylkhaiyrov.unirateplatformregistry.service;
 
 import kz.abylkhaiyrov.unirateplatformregistry.adapter.UserAdapter;
+import kz.abylkhaiyrov.unirateplatformregistry.dto.ChangePasswordDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.UserDto;
 import kz.abylkhaiyrov.unirateplatformregistry.entity.User;
 import kz.abylkhaiyrov.unirateplatformregistry.enums.Role;
@@ -9,6 +10,8 @@ import kz.abylkhaiyrov.unirateplatformregistry.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserAdapter adapter;
     private final UserRoleService userRoleService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Optional<User> findActiveByEmail(String login) {
@@ -121,6 +125,24 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<UserDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(adapter::toDto);
+    }
+
+    @Transactional
+    public boolean changePassword(ChangePasswordDto dto) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        var userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        var user = userOptional.get();
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+        return true;
     }
 
 }
