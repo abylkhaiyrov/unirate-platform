@@ -101,10 +101,10 @@ public class ForumService {
      * @return список ForumDto с найденными форумами
      */
     @Transactional(readOnly = true)
-    public List<ForumDto> searchForumsByName(Long id, String name) {
+    public List<ForumDto> searchForumsByName(String universityName, String name) {
         log.info("Searching forums by name matching: {}", name);
-        var university = universityRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
+        var university = universityRepository.findByNameContainingIgnoreCase(universityName)
+                .orElseThrow(() -> new NotFoundException("University not found with name: " + universityName));
         List<ForumDto> forumDtos = forumRepository.findByNameContainingIgnoreCaseAndUniversity(name, university)
                 .stream()
                 .map(forumAdapter::entity2Dto)

@@ -69,8 +69,8 @@ public class ForumController {
      * @return список DTO форумов, удовлетворяющих условию поиска
      */
     @GetMapping("/search")
-    public List<ForumDto> searchForumsByName(@RequestParam Long universityId,@RequestParam String name) {
-        return forumService.searchForumsByName(universityId, name);
+    public List<ForumDto> searchForumsByName(@RequestParam String universityName,@RequestParam String name) {
+        return forumService.searchForumsByName(universityName, name);
     }
 
     /**

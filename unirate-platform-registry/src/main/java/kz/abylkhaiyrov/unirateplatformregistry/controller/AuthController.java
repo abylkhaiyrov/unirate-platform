@@ -6,9 +6,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.ResetPasswordDto;
+import kz.abylkhaiyrov.unirateplatformregistry.dto.UserDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.LoginDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.UserRegisterDto;
 import kz.abylkhaiyrov.unirateplatformregistry.service.AuthService;
+import kz.abylkhaiyrov.unirateplatformregistry.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @Operation(
             summary = "User authentication",
@@ -92,5 +95,18 @@ public class AuthController {
             @RequestParam String email
     ) {
         return ResponseEntity.ok(authService.resendActivation(email));
+    }
+
+    @Operation(
+            summary = "Get user by ID",
+            description = "Returns user data by the specified ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved user", content = @Content)
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(
+            @Parameter(description = "Identifier of the user", required = true)
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 }
