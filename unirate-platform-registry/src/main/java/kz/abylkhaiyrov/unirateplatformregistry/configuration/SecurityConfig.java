@@ -39,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

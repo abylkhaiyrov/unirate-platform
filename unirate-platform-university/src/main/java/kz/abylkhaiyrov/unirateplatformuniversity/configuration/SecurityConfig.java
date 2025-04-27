@@ -33,12 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/open-api/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .antMatchers("/api/admin/university" , "/api/admin/university-address", "/api/admin/specialty").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
