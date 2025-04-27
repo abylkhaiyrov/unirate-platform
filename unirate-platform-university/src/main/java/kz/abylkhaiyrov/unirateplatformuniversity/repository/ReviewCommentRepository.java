@@ -12,4 +12,6 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
 
     List<ReviewComment> findByReview(Review review);
 
+    void deleteByReview(Review review);
+
 }

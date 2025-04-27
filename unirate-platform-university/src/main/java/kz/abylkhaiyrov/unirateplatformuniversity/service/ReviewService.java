@@ -59,13 +59,37 @@ public class ReviewService {
     }
 
     /**
-     * Удаляет отзыв по идентификатору.
+     * Deletes a review by its ID along with its associated comments.
      */
     public void delete(Long reviewId) {
-        if (!reviewRepository.existsById(reviewId)) {
-            throw new NotFoundException("Review not found with id: " + reviewId);
-        }
+        var review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found with id: " + reviewId));
+
+        // Delete associated comments first if any exist
+        deleteReviewComments(review);
+
+        // Now delete the review itself
         reviewRepository.deleteById(reviewId);
+    }
+
+    /**
+     * Deletes comments associated with the given review.
+     */
+    private void deleteReviewComments(Review review) {
+        var comments = reviewCommentRepository.findByReview(review);
+        if (!comments.isEmpty()) {
+            reviewCommentRepository.deleteByReview(review);
+        }
+    }
+
+    /**
+     * Deletes a review comment by its ID.
+     */
+    public void deleteReviewComment(Long commentId) {
+        var comment = reviewCommentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Review comment not found with id: " + commentId));
+
+        reviewCommentRepository.delete(comment);
     }
 
     /**

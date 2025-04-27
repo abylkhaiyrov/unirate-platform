@@ -63,6 +63,21 @@ public class AdminReviewController {
     }
 
     @Operation(
+            summary = "Delete a review comment by ID",
+            description = "Deletes the review comment by the given ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Review comment successfully deleted"),
+                    @ApiResponse(responseCode = "404", description = "Review comment not found")
+            }
+    )
+    @DeleteMapping("/{reviewCommentId}")
+    public ResponseEntity<Void> deleteReviewComment(
+            @Parameter(description = "Review comment ID", required = true) @PathVariable Long reviewCommentId) {
+        reviewService.deleteReviewComment(reviewCommentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
             summary = "Moderate a review",
             description = "Moderates a review by setting its status to APPROVED or REJECTED",
             responses = {
