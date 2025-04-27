@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/open-api/university")
+@RequestMapping("/open-api/universities")
 @Tag(name = "University API", description = "Operations to get universities")
 @RequiredArgsConstructor
 public class UniversityController {

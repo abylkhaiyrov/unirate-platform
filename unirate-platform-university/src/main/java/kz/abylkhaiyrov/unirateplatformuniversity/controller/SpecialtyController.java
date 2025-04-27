@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/open-api/specialty")
+@RequestMapping("/open-api/specialties")
 @Tag(name = "Specialty API", description = "Operations to get specialties")
 @RequiredArgsConstructor
 public class SpecialtyController {
