@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/open-api/favorites")
+@RequestMapping("/api/favorites")
 @Tag(name = "Favorite API", description = "Операции для управления избранными университетами")
 @RequiredArgsConstructor
 public class FavoriteController {
@@ -75,5 +75,4 @@ public class FavoriteController {
             @RequestBody UniversityComparisonRequestDto requestDto) {
         return favoriteService.searchUniversityComparison(requestDto);
     }
-
 }

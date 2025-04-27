@@ -1,59 +1,48 @@
 package kz.abylkhaiyrov.unirateplatformuniversity.controller;
 
-import kz.abylkhaiyrov.unirateplatformuniversity.dto.CreateSpecialtyDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.SpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.SpecialtyService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/open-api/specialties")
+@RequestMapping("/open-api/specialty")
+@Tag(name = "Specialty API", description = "Operations to get specialties")
 @RequiredArgsConstructor
-@Slf4j
 public class SpecialtyController {
 
     private final SpecialtyService specialtyService;
 
+    @Operation(
+            summary = "Get all specialties",
+            description = "Returns a list of all specialties",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of specialties successfully retrieved")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<SpecialtyDto>> getAllSpecialties() {
         List<SpecialtyDto> specialties = specialtyService.getAllSpecialties();
         return ResponseEntity.ok(specialties);
     }
 
+    @Operation(
+            summary = "Get specialty by ID",
+            description = "Returns data of a specialty by the given ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Specialty found"),
+                    @ApiResponse(responseCode = "404", description = "Specialty not found")
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<SpecialtyDto> getSpecialtyById(@PathVariable Long id) {
         SpecialtyDto specialty = specialtyService.getSpecialtyById(id);
         return ResponseEntity.ok(specialty);
     }
-
-    @PostMapping
-    public ResponseEntity<SpecialtyDto> createSpecialty(@RequestBody CreateSpecialtyDto specialtyDto) {
-        SpecialtyDto created = specialtyService.createSpecialty(specialtyDto);
-        return ResponseEntity.ok(created);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<SpecialtyDto> updateSpecialty(@PathVariable Long id,
-                                                        @RequestBody SpecialtyDto specialtyDto) {
-        SpecialtyDto updated = specialtyService.updateSpecialty(id, specialtyDto);
-        return ResponseEntity.ok(updated);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSpecialty(@PathVariable Long id) {
-        specialtyService.deleteSpecialty(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{specialtyId}/update")
-    public ResponseEntity<String> updateProfileUrl(
-            @PathVariable("specialtyId") Long specialtyId,
-            @RequestParam("url") String url) {
-        return ResponseEntity.ok(specialtyService.updateSpecialtyProfile(specialtyId, url));
-    }
-
 }
