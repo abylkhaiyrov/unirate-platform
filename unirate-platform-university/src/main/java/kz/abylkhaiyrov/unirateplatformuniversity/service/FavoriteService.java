@@ -68,6 +68,9 @@ public class FavoriteService {
 
     public void deleteById(Long id) {
         log.info("Delete favorite by id: {}", id);
+        if (!favoriteRepository.existsById(id)) {
+            throw new NotFoundException("Favorite not found with id: " + id);
+        }
         favoriteRepository.deleteById(id);
     }
 
