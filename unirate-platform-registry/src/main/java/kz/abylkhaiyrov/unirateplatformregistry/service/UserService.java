@@ -39,21 +39,20 @@ public class UserService {
     }
 
     public UserDto getCurrentUser() {
-        User currentPerson = SecurityUtils.getCurrentUser();
+        var currentPerson = SecurityUtils.getCurrentUser();
         UserDto userDto = adapter.toDto(currentPerson);
         userRoleService.findActiveByUser(currentPerson).ifPresent(userRole -> {
             userDto.setRole(Role.valueOf(userRole.getCode()));
         });
-
         return userDto;
     }
 
     public UserDto findById(Long id) {
-        Optional<User> byId = userRepository.findById(id);
+        var byId = userRepository.findById(id);
         if (byId.isEmpty()) {
             throw new IllegalArgumentException("User doesnt exists");
         }
-        UserDto userDto = adapter.toDto(byId.get());
+        var userDto = adapter.toDto(byId.get());
         userRoleService.findActiveByUser(byId.get()).ifPresent(userRole -> {
             userDto.setRole(Role.valueOf(userRole.getCode()));
         });
@@ -72,17 +71,17 @@ public class UserService {
             return "Profile updated successfully";
         } catch (Exception e) {
             e.printStackTrace();
-            return "Profile update failed";
+            throw new IllegalArgumentException("Profile update failed");
         }
     }
 
     @Transactional
     public UserDto updateById(Long id, UserDto userDto) {
-        Optional<User> byId = userRepository.findById(id);
+        var byId = userRepository.findById(id);
         if (byId.isEmpty())  {
             throw new IllegalArgumentException("User doesnt exists");
         }
-        User user = byId.get();
+        var user = byId.get();
         if (Objects.nonNull(userDto.getFirstName()) && (user.getFirstName() == null ||
                 !user.getFirstName().equals(userDto.getFirstName()))) {
             user.setFirstName(userDto.getFirstName());
@@ -103,12 +102,10 @@ public class UserService {
                 !user.getStatus().equals(userDto.getStatus()))) {
             user.setStatus(userDto.getStatus());
         }
-
-        User save = userRepository.save(user);
-        UserDto userDto1 = adapter.toDto(user);
+        var save = userRepository.save(user);
+        var userDto1 = adapter.toDto(user);
         userRoleService.findActiveByUser(save).ifPresent(userRole ->
                 userDto1.setRole(Role.valueOf(userRole.getCode())));
-
         return adapter.toDto(user);
     }
 
@@ -129,17 +126,15 @@ public class UserService {
 
     @Transactional
     public boolean changePassword(ChangePasswordDto dto) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        var email = SecurityContextHolder.getContext().getAuthentication().getName();
         var userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             return false;
         }
-
         var user = userOptional.get();
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
             return false;
         }
-
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
         return true;

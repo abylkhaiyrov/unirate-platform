@@ -6,6 +6,7 @@ import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.LoginDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.UserRegisterDto;
 import kz.abylkhaiyrov.unirateplatformregistry.entity.User;
 import kz.abylkhaiyrov.unirateplatformregistry.enums.Role;
+import kz.abylkhaiyrov.unirateplatformregistry.exception.NotFoundException;
 import kz.abylkhaiyrov.unirateplatformregistry.security.JwtUtil;
 import kz.abylkhaiyrov.unirateplatformregistry.security.PersonDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -61,15 +62,13 @@ public class AuthService {
     public String sendResetPasswordCode(String email) {
         var userOptional = userService.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return "User with this email not found";
+            throw new NotFoundException("User with this email not found: " + email);
         }
         var user = userOptional.get();
-
         var resetCode = generateActivationCode();
         user.setActivationCode(resetCode);
         user.setActivationCodeSentAt(LocalDateTime.now());
         userService.save(user);
-
         sendResetPasswordEmail(user.getEmail(), resetCode);
         return "Password reset code has been sent to your email";
     }
@@ -78,19 +77,18 @@ public class AuthService {
     public String resetPassword(ResetPasswordDto dto) {
         var userOptional = userService.findByEmail(dto.getEmail());
         if (userOptional.isEmpty()) {
-            return "User with this email not found";
+            throw new NotFoundException("User with this email not found: " + dto.getEmail());
         }
         var user = userOptional.get();
 
         if (!Objects.equals(user.getActivationCode(), dto.getResetCode())) {
-            return "Invalid password reset code";
+            throw new IllegalArgumentException("Invalid password reset code");
         }
 
         if (user.getActivationCodeSentAt() == null ||
                 user.getActivationCodeSentAt().plusHours(24).isBefore(LocalDateTime.now())) {
-            return "Password reset code has expired. Please request a new code.";
+            throw new IllegalArgumentException("Password reset code has expired. Please request a new code.");
         }
-
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         user.setActivationCode(null);
         user.setActivationCodeSentAt(null);
@@ -116,11 +114,11 @@ public class AuthService {
         if (userOptional.isPresent()) {
             var user = userOptional.get();
             if (user.isActive()) {
-                return "User is already activated";
+                throw new IllegalArgumentException("User is already activated");
             }
             var sentAt = user.getActivationCodeSentAt();
             if (sentAt != null && sentAt.plusHours(24).isBefore(LocalDateTime.now())) {
-                return "Activation code has expired. Please request a new code.";
+                throw new IllegalArgumentException("Activation code has expired. Please request a new code.");
             }
             user.setActive(true);
             user.setActivationCode(null);
@@ -128,18 +126,18 @@ public class AuthService {
             userService.save(user);
             return "User successfully activated";
         }
-        return "Invalid or expired activation code";
+        throw new IllegalArgumentException("Invalid or expired activation code");
     }
 
     @Transactional
     public String resendActivation(String email) {
         var userOptional = userService.findByEmail(email);
         if (userOptional.isEmpty()) {
-            return "User with this email not found";
+            throw new IllegalArgumentException("User with this email not found: " + email);
         }
         var user = userOptional.get();
         if (user.isActive()) {
-            return "User is already activated";
+            throw new IllegalArgumentException("User is already activated");
         }
         var activationCode = generateActivationCode();
         user.setActivationCode(activationCode);

@@ -54,7 +54,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Password reset code sent successfully", content = @Content)
     @PostMapping("/send-reset-password-code")
     public ResponseEntity<String> sendResetPasswordCode(@RequestParam String email) {
-        String result = authService.sendResetPasswordCode(email);
+        var result = authService.sendResetPasswordCode(email);
         return ResponseEntity.ok(result);
     }
 
@@ -65,7 +65,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Password successfully changed", content = @Content)
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordDto dto) {
-        String result = authService.resetPassword(dto);
+        var result = authService.resetPassword(dto);
         return ResponseEntity.ok(result);
     }
 
