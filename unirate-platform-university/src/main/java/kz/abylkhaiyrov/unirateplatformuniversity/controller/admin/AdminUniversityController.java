@@ -93,4 +93,21 @@ public class AdminUniversityController {
         UniversityDto updated = universityService.activateUniversity(id, active);
         return ResponseEntity.ok(updated);
     }
+
+    @Operation(
+            summary = "Update university rating",
+            description = "Updates the rating of a university based on the provided rating",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "University rating updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "University not found")
+            }
+    )
+    @PutMapping("/{universityId}/rating")
+    public ResponseEntity<String> updateUniversityRating(
+            @PathVariable Long universityId,
+            @RequestParam Integer rating) {
+        universityService.plusRating(rating, universityId);
+        return ResponseEntity.ok("University rating updated successfully");
+    }
+
 }

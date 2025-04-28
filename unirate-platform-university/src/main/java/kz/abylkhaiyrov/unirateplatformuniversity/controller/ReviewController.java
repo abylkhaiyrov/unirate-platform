@@ -67,17 +67,17 @@ public class ReviewController {
     }
 
     @Operation(
-            summary = "Get review statistics for a university",
-            description = "Returns aggregated review statistics (average rating and number of reviews) for the given university",
+            summary = "Get review statistics for a Forum",
+            description = "Returns aggregated review statistics (average rating and number of reviews) for the given Forum",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Statistics successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "University not found")
+                    @ApiResponse(responseCode = "404", description = "Forum not found")
             }
     )
-    @GetMapping("/university/{universityId}/stats")
+    @GetMapping("/university/{forumId}/stats")
     public ResponseEntity<UniversityReviewStats> getUniversityReviewStats(
-            @Parameter(description = "University ID", required = true) @PathVariable Long universityId) {
-        UniversityReviewStats stats = reviewService.getStatsForUniversity(universityId);
+            @Parameter(description = "Forum ID", required = true) @PathVariable Long forumId) {
+        UniversityReviewStats stats = reviewService.getStatsForUniversity(forumId);
         return ResponseEntity.ok(stats);
     }
 
@@ -94,5 +94,26 @@ public class ReviewController {
             @Parameter(description = "Review ID", required = true) @PathVariable Long reviewId) {
         List<ReviewCommentDto> comments = reviewService.getComments(reviewId);
         return ResponseEntity.ok(comments);
+    }
+
+    @Operation(
+            summary = "Get reviews by university ID",
+            description = "Returns a list of reviews for the specified university, limited to the most recent 10 reviews",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Reviews found"),
+                    @ApiResponse(responseCode = "404", description = "University not found"),
+                    @ApiResponse(responseCode = "204", description = "No reviews available")
+            }
+    )
+    @GetMapping("/university/{universityId}/reviews")
+    public ResponseEntity<List<ReviewReturnDto>> getReviewsByUniversityLimit(
+            @Parameter(description = "University ID", required = true) @PathVariable Long universityId) {
+        var reviews = reviewService.getReviewsByUniversityLimit(universityId);
+
+        if (reviews.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(reviews);
     }
 }

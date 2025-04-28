@@ -105,7 +105,7 @@ public class ForumService {
         log.info("Searching forums by name matching: {}", name);
         var university = universityRepository.findByNameContainingIgnoreCase(universityName)
                 .orElseThrow(() -> new NotFoundException("University not found with name: " + universityName));
-        List<ForumDto> forumDtos = forumRepository.findByNameContainingIgnoreCaseAndUniversity(name, university)
+        var forumDtos = forumRepository.findByNameContainingIgnoreCaseAndUniversity(name, university)
                 .stream()
                 .map(forumAdapter::entity2Dto)
                 .collect(Collectors.toList());

@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static kz.abylkhaiyrov.unirateplatformuniversity.util.StringUtils.lowerSqlLike;
@@ -76,13 +77,11 @@ public class UniversityService {
         return adapter.entity2Dto(entity, universityAddress, faculty);
     }
 
-    public University getUniversityById(Long id){
+    public Optional<University> getUniversityById(Long id){
         if (id == null){
             throw new EmptyException("University id cannot be null");
         }
-
-        return universityRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
+        return universityRepository.findById(id);
     }
 
     public UniversityDto getById(Long id){

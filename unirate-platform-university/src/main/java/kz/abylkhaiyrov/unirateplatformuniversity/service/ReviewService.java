@@ -12,6 +12,7 @@ import kz.abylkhaiyrov.unirateplatformuniversity.repository.ReviewCommentReposit
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class ReviewService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final ForumRepository forumRepository;
     private final UserCache userCache;
+    private final UniversityService universityService;
 
     /**
      * Создаёт новый отзыв.
@@ -118,6 +120,21 @@ public class ReviewService {
     public Page<ReviewReturnDto> getAll(Pageable pageable) {
         return reviewRepository.findAll(pageable)
                 .map(this::mapToReviewReturnDto);
+    }
+
+    public List<ReviewReturnDto> getReviewsByUniversityLimit(Long universityId) {
+        var university = universityService.getUniversityById(universityId)
+                .orElseThrow(() -> new NotFoundException("University not found with id: " + universityId));
+
+        var forumList = forumRepository.findAllByUniversity(university);
+        if (forumList.isEmpty()) {
+            return List.of();
+        }
+
+        return reviewRepository.findAllByForumsAndCreatedDateDesc(forumList, PageRequest.of(0, 10))
+                .stream()
+                .map(this::mapToReviewReturnDto)
+                .collect(Collectors.toList());
     }
 
     /**
