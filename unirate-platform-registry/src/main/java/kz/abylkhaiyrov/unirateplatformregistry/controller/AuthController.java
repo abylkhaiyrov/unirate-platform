@@ -54,8 +54,8 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Password reset code sent successfully", content = @Content)
     @PostMapping("/send-reset-password-code")
     public ResponseEntity<String> sendResetPasswordCode(@RequestParam String email) {
-        var result = authService.sendResetPasswordCode(email);
-        return ResponseEntity.ok(result);
+        authService.sendResetPasswordCode(email);
+        return ResponseEntity.ok("Password reset code sent successfully");
     }
 
     @Operation(
@@ -65,8 +65,20 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Password successfully changed", content = @Content)
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordDto dto) {
-        var result = authService.resetPassword(dto);
-        return ResponseEntity.ok(result);
+        authService.resetPassword(dto);
+        return ResponseEntity.ok("Password successfully changed");
+    }
+
+    @Operation(
+            summary = "Verify password reset code",
+            description = "Verifies if the provided reset code is valid and not expired"
+    )
+    @ApiResponse(responseCode = "200", description = "Reset code is valid", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Invalid or expired reset code", content = @Content)
+    @PostMapping("/verify-reset-password-code")
+    public ResponseEntity<String> verifyResetPasswordCode(@RequestParam String email, @RequestParam Integer resetCode) {
+        authService.verifyResetPasswordCode(email, resetCode);
+        return ResponseEntity.ok("Reset code is valid");
     }
 
     @Operation(

@@ -1,6 +1,5 @@
 package kz.abylkhaiyrov.unirateplatformregistry.service;
 
-import kz.abylkhaiyrov.unirateplatformregistry.adapter.UserAdapter;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.ResetPasswordDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.LoginDto;
 import kz.abylkhaiyrov.unirateplatformregistry.dto.auth.UserRegisterDto;
@@ -28,7 +27,6 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    private final UserAdapter userMapper;
     private final UserRoleService userRoleService;
     private final MailSender mailSender;
 
@@ -59,41 +57,46 @@ public class AuthService {
     }
 
     @Transactional
-    public String sendResetPasswordCode(String email) {
-        var userOptional = userService.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("User with this email not found: " + email);
-        }
-        var user = userOptional.get();
-        var resetCode = generateActivationCode();
+    public void sendResetPasswordCode(String email) {
+        var user = userService.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User with this email not found: " + email));
+
+        int resetCode = generateResetCode();
         user.setActivationCode(resetCode);
         user.setActivationCodeSentAt(LocalDateTime.now());
-        userService.save(user);
+
         sendResetPasswordEmail(user.getEmail(), resetCode);
-        return "Password reset code has been sent to your email";
+        userService.save(user);
     }
 
     @Transactional
     public String resetPassword(ResetPasswordDto dto) {
-        var userOptional = userService.findByEmail(dto.getEmail());
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("User with this email not found: " + dto.getEmail());
-        }
-        var user = userOptional.get();
+        var user = userService.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new NotFoundException("User with this email not found: " + dto.getEmail()));
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setActivationCode(null);
+        user.setActivationCodeSentAt(null);
+        userService.save(user);
+        return "Password successfully changed";
+    }
 
-        if (!Objects.equals(user.getActivationCode(), dto.getResetCode())) {
-            throw new IllegalArgumentException("Invalid password reset code");
+    @Transactional
+    public void verifyResetPasswordCode(String email, Integer resetCode) {
+        var user = userService.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User with this email not found: " + email));
+
+        if (!Objects.equals(user.getActivationCode(), resetCode)) {
+            throw new IllegalArgumentException("Invalid reset code");
         }
 
         if (user.getActivationCodeSentAt() == null ||
                 user.getActivationCodeSentAt().plusHours(24).isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Password reset code has expired. Please request a new code.");
         }
-        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        user.setActivationCode(null);
-        user.setActivationCodeSentAt(null);
-        userService.save(user);
-        return "Password successfully changed";
+    }
+
+    private Integer generateResetCode() {
+        return new Random().nextInt(9000) + 1000;
     }
 
     public void sendResetPasswordEmail(String email, Integer resetCode) {
