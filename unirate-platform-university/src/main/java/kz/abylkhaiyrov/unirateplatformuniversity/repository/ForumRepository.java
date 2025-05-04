@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ForumRepository extends JpaRepository<Forum, Long> {
 
-    List<Forum> findByNameContainingIgnoreCaseAndUniversity(String name, University university);
+    List<Forum> findByNameContainingIgnoreCase(String name);
 
     List<Forum> findAllByUniversity(University university);
 

@@ -95,17 +95,16 @@ public class ForumService {
     }
 
     /**
-     * Ищет форумы по имени с частичным совпадением (без учета регистра).
+     * Ищет форумы по наименованию с частичным совпадением (без учета регистра).
      *
      * @param name часть или полное название форума
      * @return список ForumDto с найденными форумами
      */
     @Transactional(readOnly = true)
-    public List<ForumDto> searchForumsByName(String universityName, String name) {
+    public List<ForumDto> searchForumsByName(String name) {
         log.info("Searching forums by name matching: {}", name);
-        var university = universityRepository.findByNameContainingIgnoreCase(universityName)
-                .orElseThrow(() -> new NotFoundException("University not found with name: " + universityName));
-        var forumDtos = forumRepository.findByNameContainingIgnoreCaseAndUniversity(name, university)
+        // Выполняем поиск форумов, где имя форума частично совпадает с переданным параметром (без учета регистра)
+        var forumDtos = forumRepository.findByNameContainingIgnoreCase(name)
                 .stream()
                 .map(forumAdapter::entity2Dto)
                 .collect(Collectors.toList());
