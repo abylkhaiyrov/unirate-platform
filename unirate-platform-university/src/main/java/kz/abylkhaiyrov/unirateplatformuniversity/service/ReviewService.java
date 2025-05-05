@@ -275,4 +275,16 @@ public class ReviewService {
     private ReviewComment saveReviewComment(ReviewComment reviewComment) {
         return reviewCommentRepository.save(reviewComment);
     }
+
+    public void deleteReviewsWithIds(List<Long> reviewIds) {
+        var reviews = reviewRepository.findAllById(reviewIds);
+        if (reviews.isEmpty()) {
+            return;
+        }
+        try {
+            reviewRepository.deleteAllById(reviewIds);
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while deleting reviews", e);
+        }
+    }
 }

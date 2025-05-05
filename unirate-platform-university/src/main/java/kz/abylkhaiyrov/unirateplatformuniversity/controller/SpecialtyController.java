@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.SpecialtyDto;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.SpecialtyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,4 +46,24 @@ public class SpecialtyController {
         SpecialtyDto specialty = specialtyService.getSpecialtyById(id);
         return ResponseEntity.ok(specialty);
     }
+
+    @Operation(
+            summary = "Search specialties by name",
+            description = "Returns a list of specialties matching the provided name",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of specialties successfully retrieved"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input provided"),
+                    @ApiResponse(responseCode = "404", description = "No specialties found for the given name")
+            }
+    )
+    @GetMapping("/search")
+    public ResponseEntity<List<SpecialtyDto>> getSpecialtiesByName(
+            @RequestParam String name) {
+        List<SpecialtyDto> specialties = specialtyService.getSpecialityByName(name);
+        if (specialties.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(specialties);
+        }
+        return ResponseEntity.ok(specialties);
+    }
+
 }

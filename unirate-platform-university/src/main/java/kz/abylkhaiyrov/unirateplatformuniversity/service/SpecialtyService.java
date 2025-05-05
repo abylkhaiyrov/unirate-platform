@@ -132,6 +132,15 @@ public class SpecialtyService {
         log.info("Deleted Specialty with id: {}", id);
     }
 
+    /*
+    * Find specialities with name
+     */
+    public List<SpecialtyDto> getSpecialityByName(String name) {
+        return specialtyRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(specialtyMapper::entityToDto)
+                .collect(Collectors.toList());
+    }
 
     public String updateSpecialtyProfile(Long specialtyId, String url) {
         var user = specialtyRepository.findById(specialtyId)

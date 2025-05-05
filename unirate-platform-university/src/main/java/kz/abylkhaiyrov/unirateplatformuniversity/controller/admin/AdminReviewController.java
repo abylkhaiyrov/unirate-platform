@@ -7,8 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.abylkhaiyrov.unirateplatformuniversity.dto.*;
 import kz.abylkhaiyrov.unirateplatformuniversity.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/review")
@@ -137,5 +140,26 @@ public class AdminReviewController {
             @RequestBody ReviewCommentDto commentDto) {
         ReviewCommentDto createdComment = reviewService.addComment(reviewId, commentDto);
         return ResponseEntity.ok(createdComment);
+    }
+
+    @Operation(
+            summary = "Delete reviews and their comments",
+            description = "Deletes reviews and their associated comments by the given review IDs",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Reviews and comments successfully deleted"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input provided"),
+                    @ApiResponse(responseCode = "404", description = "Reviews not found for the given IDs"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @DeleteMapping("/reviews")
+    public ResponseEntity<Void> deleteReviewsWithIds(
+            @RequestParam List<Long> reviewIds) {
+        try {
+            reviewService.deleteReviewsWithIds(reviewIds);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
