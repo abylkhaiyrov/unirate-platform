@@ -11,7 +11,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/unirate_platform
     username: postgres
-    password: qwerty
+    password: Tyxwy4-huhvuw-pamwyb
     driver-class-name: org.postgresql.Driver
   mail:
     host: smtp.gmail.com
