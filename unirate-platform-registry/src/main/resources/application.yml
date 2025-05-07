@@ -9,9 +9,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5435/unirate_platform}
+    url: jdbc:postgresql://localhost:5435/unirate_platform
     username: postgres
-    password: Tyxwy4-huhvuw-pamwyb
+    password: qwerty
     driver-class-name: org.postgresql.Driver
   mail:
     host: smtp.gmail.com
@@ -56,7 +56,7 @@ logging:
   level:
     ROOT: INFO
     kz.mms.website_app: INFO
-
+logging.level.org.springframework.web: debug
 eureka:
   client:
     serviceUrl:
