@@ -76,8 +76,7 @@ public class UniversityAddressService {
         log.info("Удаление UniversityAddress с id: {}", id);
         var existing = universityAddressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("University Address not found with id: " + id));
-        existing.setActive(false);
-        saveAddress(existing);
+        universityAddressRepository.delete(existing);
     }
 
     public Optional<UniversityAddress> getUniversityAddressByUniversityId(Long universityId) {

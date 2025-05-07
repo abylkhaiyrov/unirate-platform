@@ -127,8 +127,7 @@ public class SpecialtyService {
     public void deleteSpecialty(Long id) {
         var specialty = specialtyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Specialty not found with id: " + id));
-        specialty.setActive(false);
-        specialtyRepository.save(specialty);
+        specialtyRepository.delete(specialty);
         log.info("Deleted Specialty with id: {}", id);
     }
 

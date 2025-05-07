@@ -65,8 +65,7 @@ public class FacultyService {
         var faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Факультет не найден с id: " + id));
         log.info("Деактивация факультета с id: {}", id);
-        faculty.setActive(false);
-        save(faculty);
+        facultyRepository.delete(faculty);
     }
 
     public FacultyDto updateById(Long id, FacultyDto dto) {

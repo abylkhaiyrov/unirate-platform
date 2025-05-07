@@ -20,6 +20,12 @@ public class ForumController {
         this.forumService = forumService;
     }
 
+    @DeleteMapping({"/{forumId}"})
+    ResponseEntity<Void> deleteById(@RequestParam("forumId") Long forumId) {
+        forumService.deleteForum(forumId);
+        return ResponseEntity.ok().build();
+    }
+
     /**
      * Создание нового форума.
      *

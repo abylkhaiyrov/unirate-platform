@@ -141,4 +141,11 @@ public class ForumService {
             return "Forum update failed";
         }
     }
+
+    public void deleteForum(Long forumId) {
+        log.info("Deleting Forum with id: {}", forumId);
+        var forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new IllegalArgumentException("Forum doesn't exist with id: " + forumId));
+        forumRepository.delete(forum);
+    }
 }

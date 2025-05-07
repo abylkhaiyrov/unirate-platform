@@ -206,8 +206,7 @@ public class UniversityService {
         var entity = universityRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("University not found with id: " + id));
         log.info("Deleting (deactivating) university with id: {}", id);
-        entity.setActive(false);
-        saveUniversity(entity);
+        universityRepository.delete(entity);
     }
 
     public Page<UniversityDto> searchUniversities(UniversitySearchDto searchDto) {
