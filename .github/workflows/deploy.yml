@@ -136,7 +136,7 @@ jobs:
               ;;
               bala-baqsham-lending)
               docker run -d --restart=always \
-                -p 8081:8081 \
+                -p 9090:9090 \
                 --network java-backend \
                 --name bala-baqsham-lending \
                 -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://unirate-platform-eureka-server:8761/eureka  \
