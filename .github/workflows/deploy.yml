@@ -16,6 +16,7 @@ jobs:
             unirate-platform-eureka-server,
             unirate-platform-registry,
             unirate-platform-university,
+            bala-baqsham-lending,
           ]
 
     steps:
@@ -132,6 +133,19 @@ jobs:
                 -e EUREKA_INSTANCE_HOSTNAME=localhost \
                 -e EUREKA_HEALTH_ENABLED=true \
                 unirate-platform-api-gateway
+              ;;
+              bala-baqsham-lending)
+              docker run -d --restart=always \
+                -p 9090:9090 \
+                --network java-backend \
+                --name bala-baqsham-lending \
+                -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://unirate-platform-eureka-server:8761/eureka  \
+                -e EUREKA_CLIENT_FETCHREGISTRY=true \
+                -e EUREKA_CLIENT_REGISTERWITHEUREKA=true \
+                -e EUREKA_SERVER_ENABLESELFPRESERVATION=false \
+                -e EUREKA_INSTANCE_HOSTNAME=localhost \
+                -e EUREKA_HEALTH_ENABLED=true \
+                bala-baqsham-lending
               ;;
               *)
               # Если вдруг появится новый сервис, он сюда попадёт.
