@@ -16,7 +16,7 @@ jobs:
             unirate-platform-eureka-server,
             unirate-platform-registry,
             unirate-platform-university,
-            bala-baqsham-lending,
+            bala-baqsham-lending
           ]
 
     steps:
