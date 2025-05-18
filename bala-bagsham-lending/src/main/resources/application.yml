@@ -40,5 +40,5 @@ eureka:
 logging:
   level:
     ROOT: INFO
-    kz.mms.website_app: INFO
+    kz.bala.baqsham.balabaqshamlending: INFO
 logging.level.org.springframework.web: debug
