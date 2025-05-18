@@ -23,6 +23,7 @@ server:
   forward-headers-strategy: native
   port: 9090
 
+
 eureka:
   client:
     serviceUrl:
@@ -35,3 +36,9 @@ eureka:
     hostname: localhost
   health:
     enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+    kz.mms.website_app: INFO
+logging.level.org.springframework.web: debug
